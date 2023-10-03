@@ -31,7 +31,8 @@ async def init_app(argv=None):
     # setup db
     await setup_db(app)
 
-    setup_web_driver(app)    
+    if bool(CONFIG.START_DRIVER):
+        setup_web_driver(app)    
 
     # setup views and routes
     setup_routes(app)
