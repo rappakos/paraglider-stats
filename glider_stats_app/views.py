@@ -35,6 +35,11 @@ async def load_pilots(request):
         await db.save_pilots(pilots)
         # redirect
         raise redirect(request.app.router, 'pilots')
-    
     else:
         raise NotImplementedError("invalid?")
+    
+async def delete_pilots(request):
+    if request.method == 'POST':
+        await db.delete_pilots()
+
+    raise redirect(request.app.router, 'pilots')

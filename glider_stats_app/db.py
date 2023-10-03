@@ -78,6 +78,11 @@ async def get_max_rank():
             async for row in cursor:
                 return row[0] or 0
 
+async def delete_pilots():
+     async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute("""DELETE FROM pilots """)        
+        await db.commit()
+
 async def save_pilots(pilots):
     year = 2023 # TODO pass as param?
     async with aiosqlite.connect(DB_NAME) as db:
@@ -96,4 +101,4 @@ async def save_pilots(pilots):
                 """, params)
             #print(res)
 
-        await db.commit() # ?
+        await db.commit()
