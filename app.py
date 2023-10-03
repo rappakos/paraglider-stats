@@ -7,7 +7,7 @@ from aiohttp import web
 
 from glider_stats_app.routes import setup_routes
 from glider_stats_app.middlewares import setup_middlewares
-#from glider_stats_app.db import setup_db
+from glider_stats_app.db import setup_db
 
 
 from config import DefaultConfig
@@ -29,7 +29,7 @@ async def init_app(argv=None):
         app, loader=jinja2.PackageLoader('glider_stats_app', 'templates'))
 
     # setup db
-    #await setup_db(app)
+    await setup_db(app)
 
     # setup views and routes
     setup_routes(app)
