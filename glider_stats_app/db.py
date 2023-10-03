@@ -100,5 +100,23 @@ async def save_pilots(pilots):
                     WHERE NOT EXISTS (SELECT 1 FROM pilots p WHERE p.[year]=:year AND p.[pilot_id]=:pilot_id )
                 """, params)
             #print(res)
+            if pilot['flights']:
+                for flight in pilot['flights']:
+                    params = {
+                        'pilot_id': pilot['pilot_id'],
+                        'flight_id': flight['flight_id'],
+                        'launch': flight['launch'],
+                        'flight_type': flight['flight_type'],
+                        'flight_length': flight['flight_length'],
+                        'flight_points': flight['flight_points'],
+                        'glider': flight['glider'],
+                        'details': flight['details']
+                    }
+                    await db.execute("""
+                        INSERT INTO flights
+                                (pilot_id, flight_id, launch,flight_type,flight_length,flight_points, glider, details)
+                        SELECT :pilot_id, :flight_id, :launch,:flight_type,:flight_length,:flight_points, :glider, :details
+                        WHERE NOT EXISTS (SELECT 1 FROM flights f WHERE f.flight_id = :flight_id)
+                        """, params)
 
         await db.commit()
