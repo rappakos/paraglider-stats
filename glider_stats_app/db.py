@@ -77,3 +77,23 @@ async def get_max_rank():
                                  WHERE year = :year """,param) as cursor:
             async for row in cursor:
                 return row[0] or 0
+
+async def save_pilots(pilots):
+    year = 2023 # TODO pass as param?
+    async with aiosqlite.connect(DB_NAME) as db:
+        for pilot in pilots:
+            params = {
+                'year': year,
+                'xc_rank':  pilot['xc_rank'],
+                'username': pilot['username'],
+                'pilot_id': pilot['pilot_id']
+            }
+            #print(params)
+            res = await db.execute_insert("""
+                    INSERT INTO pilots ([year],[xc_rank], username, pilot_id)
+                    SELECT :year, :xc_rank, :username, :pilot_id
+                    WHERE NOT EXISTS (SELECT 1 FROM pilots p WHERE p.[year]=:year AND p.[pilot_id]=:pilot_id )
+                """, params)
+            #print(res)
+
+        await db.commit() # ?

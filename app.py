@@ -8,7 +8,7 @@ from aiohttp import web
 from glider_stats_app.routes import setup_routes
 from glider_stats_app.middlewares import setup_middlewares
 from glider_stats_app.db import setup_db
-
+from glider_stats_app.driver import setup_web_driver
 
 from config import DefaultConfig
 
@@ -30,6 +30,8 @@ async def init_app(argv=None):
 
     # setup db
     await setup_db(app)
+
+    setup_web_driver(app)    
 
     # setup views and routes
     setup_routes(app)

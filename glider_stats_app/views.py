@@ -30,9 +30,9 @@ async def load_pilots(request):
         # get next batch
         max_rank = await db.get_max_rank()
         # parse xcontest
-        pilots = await xcontest_loader.load_pilots(max_rank)
-        # save batch data to DB
-
+        driver=request.app.driver
+        pilots = await xcontest_loader.load_pilots(driver, max_rank)
+        await db.save_pilots(pilots)
         # redirect
         raise redirect(request.app.router, 'pilots')
     
