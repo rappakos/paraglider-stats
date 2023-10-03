@@ -3,6 +3,7 @@ import aiohttp_jinja2
 from aiohttp import web
 
 from . import db
+from . import xcontest_loader
 
 def redirect(router, route_name):
     location = router[route_name].url_for()
@@ -28,9 +29,8 @@ async def load_pilots(request):
     if request.method == 'POST':
         # get next batch
         max_rank = await db.get_max_rank()
-        #print(max_rank)
-        # use xcontest loader 
-
+        # parse xcontest
+        pilots = await xcontest_loader.load_pilots(max_rank)
         # save batch data to DB
 
         # redirect

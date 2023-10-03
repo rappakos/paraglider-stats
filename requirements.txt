@@ -4,3 +4,6 @@ aiosqlite
 numpy
 pandas
 xlsxwriter
+bs4
+python-dotenv
+webdriver-manager
