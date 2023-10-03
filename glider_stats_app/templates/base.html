@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{title}}</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="w3-container">
+      <header>
+        {% include "./_menu.html" %}
+      </header>
+      <h1>{{title}}</h1>
+
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>
