@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% set title = "Gliders" %}
+
+{% block content %}
+<h2>XContest 2023</h2>
+<table class="w3-table w3-bordered">
+    <tr>
+        <th>Glider</th>
+        <th>Class</th>
+        <th>Standrard name</th>
+        <th>Count</th>
+    </tr>
+    {% for glider in gliders %}
+    <tr>
+        <td>{{ glider.glider }}</td>
+        <td>{{ glider.class }}</td>
+        <td>{{ glider.glider_norm }}</td>
+        <td>{{ glider.flight_count }}</td>
+    </tr>    
+    {% endfor %}
+</table>
+
+{% endblock %}

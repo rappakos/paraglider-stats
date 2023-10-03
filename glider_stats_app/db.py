@@ -49,6 +49,27 @@ async def get_main_counts():
 
     return  year, pilots, flights, gliders  
 
+async def get_gliders():
+        year = 2023
+        gliders = []
+        async with aiosqlite.connect(DB_NAME) as db:
+            param = {'year':year}
+            async with db.execute("""SELECT f.glider, count(*) [count]
+                    FROM flights f 
+                    WHERE NOT EXISTS (SELECT 1 FROM gliders g WHERE g.glider=f.glider COLLATE NOCASE)
+                        AND f.glider <> ''
+                    GROUP BY f.glider  
+                    HAVING count(*) > 10
+                    ORDER BY count(*) DESC
+                    LIMIT 5 """,param) as cursor:
+                async for row in cursor:
+                    gliders.append({
+                        'glider': row[0],
+                        'class': None,
+                        'glider_norm': None,
+                        'flight_count':  row[1]
+                    })
+        return gliders
 
 async def get_pilots():
     year = 2023 # TODO pass as param?
