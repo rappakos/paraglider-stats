@@ -49,7 +49,7 @@ async def get_main_counts():
 
     return  year, pilots, flights, gliders  
 
-async def get_gliders():
+async def get_unclassed_gliders():
         year = 2023
         gliders = []
         async with aiosqlite.connect(DB_NAME) as db:
@@ -65,11 +65,29 @@ async def get_gliders():
                 async for row in cursor:
                     gliders.append({
                         'glider': row[0],
-                        'class': None,
-                        'glider_norm': None,
                         'flight_count':  row[1]
                     })
         return gliders
+
+async def get_gliders():
+        year = 2023
+        gliders = []
+        async with aiosqlite.connect(DB_NAME) as db:
+            param = {'year':year}
+            async with db.execute("""SELECT g.glider_norm, g.class, count(*) [count]
+                    FROM flights f 
+                    INNER JOIN gliders g WHERE g.glider=f.glider COLLATE NOCASE
+                    GROUP BY g.glider_norm  
+                    ORDER BY count(*) DESC
+                    LIMIT 5 """,param) as cursor:
+                async for row in cursor:
+                    gliders.append({
+                        'glider_norm': row[0],
+                        'class': row[1],
+                        'flight_count':  row[2]
+                    })
+        return gliders
+
 
 async def get_pilots():
     year = 2023 # TODO pass as param?
