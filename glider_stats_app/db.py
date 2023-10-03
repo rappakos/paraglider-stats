@@ -79,7 +79,7 @@ async def get_gliders():
                     INNER JOIN gliders g WHERE g.glider=f.glider COLLATE NOCASE
                     GROUP BY g.glider_norm  
                     ORDER BY count(*) DESC
-                    LIMIT 5 """,param) as cursor:
+                    LIMIT 50 """,param) as cursor:
                 async for row in cursor:
                     gliders.append({
                         'glider_norm': row[0],
