@@ -14,3 +14,11 @@ async def index(request):
             'flights': flights,
             'gliders': gliders
     }
+@aiohttp_jinja2.template('pilots.html')
+async def pilots(request):
+    pilots = await db.get_pilots()
+    #print(pilots)
+    return  {'pilots':pilots}
+
+async def load_pilots(request):
+    raise NotImplementedError("todo post")

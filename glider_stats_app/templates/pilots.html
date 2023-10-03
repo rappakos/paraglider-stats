@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% set title = "Pilots" %}
+
+
+{% block content %}
+<h2>XContest 2023</h2>
+
+<!-- <a href="/pilots/load" class="w3-button">Load more pilots</a> -->
+
+<table class="w3-table w3-bordered">
+    <tr>
+        <th>Rank</th>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    {% for pilot in pilots %}
+    <tr>
+        <td>{{ pilot.rank }}</td>
+        <td>{{ pilot.pilot_id }}</td>
+        <td>{{ pilot.username }}</td>
+    </tr>    
+    {% endfor %}
+</table>
+
+{% endblock %}

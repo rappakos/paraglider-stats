@@ -48,3 +48,22 @@ async def get_main_counts():
 
 
     return  year, pilots, flights, gliders  
+
+
+async def get_pilots():
+    year = 2023 # TODO pass as param?
+    res = []
+    async with aiosqlite.connect(DB_NAME) as db:
+        param = {'year': year,"page_size": 20}
+        async with db.execute("""SELECT xc_rank, pilot_id, username
+                                 FROM pilots 
+                                 WHERE year = :year 
+                                 ORDER BY xc_rank DESC
+                                 LIMIT :page_size """,param) as cursor:
+            async for row in cursor:
+                 res.append({
+                        'rank':row[0],
+                        'pilot_id':row[1],
+                        'username':row[2]
+                        })
+    return res
