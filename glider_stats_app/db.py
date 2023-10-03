@@ -67,3 +67,13 @@ async def get_pilots():
                         'username':row[2]
                         })
     return res
+
+async def get_max_rank():
+    year = 2023 # TODO pass as param?
+    async with aiosqlite.connect(DB_NAME) as db:
+        param = {'year': year}
+        async with db.execute("""SELECT MAX(xc_rank) 
+                                 FROM pilots
+                                 WHERE year = :year """,param) as cursor:
+            async for row in cursor:
+                return row[0] or 0

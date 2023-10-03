@@ -4,6 +4,10 @@ from aiohttp import web
 
 from . import db
 
+def redirect(router, route_name):
+    location = router[route_name].url_for()
+    return web.HTTPFound(location)
+
 @aiohttp_jinja2.template('index.html')
 async def index(request):
     year, pilots, flights, gliders = await db.get_main_counts()
@@ -21,4 +25,16 @@ async def pilots(request):
     return  {'pilots':pilots}
 
 async def load_pilots(request):
-    raise NotImplementedError("todo post")
+    if request.method == 'POST':
+        # get next batch
+        max_rank = await db.get_max_rank()
+        #print(max_rank)
+        # use xcontest loader 
+
+        # save batch data to DB
+
+        # redirect
+        raise redirect(request.app.router, 'pilots')
+    
+    else:
+        raise NotImplementedError("invalid?")
