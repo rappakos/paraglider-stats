@@ -100,6 +100,7 @@ async def get_gliders():
             ('sigma', lambda value: np.std(np.log(value/point_goal)) )
         ])
 
+        df['p50'] = df.apply(lambda row: lognormal_1(row.mu-math.log(0.5),row.sigma), axis=1)
         df['p100'] = df.apply(lambda row: lognormal_1(row.mu,row.sigma), axis=1)
         df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
         #print(df.columns)
