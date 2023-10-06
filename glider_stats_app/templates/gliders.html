@@ -16,18 +16,25 @@
                 <th>Glider</th>
                 <th>Class</th>
                 <th>Count</th>
-                <th>Log-Normal mu</th>
-                <th>Log-Normal sigma</th>
-                <th>P( xc &gt;= 100 )</th>
-                <th>P( xc &gt;= 200 )</th>
+                <th colspan="2">Log-Normal params</th>
+                <th colspan="2">P( xc &gt;= X )</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>mu</th>
+                <th>sigma</th>
+                <th>X=100</th>
+                <th>X=200</th>
             </tr>
             {% for glider in gliders %}
             <tr>
                 <td>{{ glider.glider_norm }}</td>
                 <td>{{ glider.class }}</td>
                 <td>{{ glider.count }}</td>
-                <td>{{ glider.mu }}</td>
-                <td>{{ glider.sigma }}</td>
+                <td>{{  '{0:0.4f}'.format(glider.mu) }}</td>
+                <td>{{  '{0:0.2f}'.format(glider.sigma) }}</td>
                 <td>{{ (glider.p100*100)|round|int }} %</td>
                 <td>{{ (glider.p200*100)|round|int }} %</td>
             </tr>    

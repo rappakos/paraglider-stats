@@ -1,4 +1,5 @@
 # views.py
+import os
 import aiohttp_jinja2
 from aiohttp import web
 
@@ -23,7 +24,8 @@ async def index(request):
 async def pilots(request):
     pilots = await db.get_pilots()
     #print(pilots)
-    return  {'pilots':pilots}
+    return  {'pilots':pilots,
+            'allow_delete': 'ALLOW_DELETE' in os.environ and os.environ['ALLOW_DELETE'] }
 
 async def load_pilots(request):
     if request.method == 'POST':

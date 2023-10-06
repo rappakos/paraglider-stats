@@ -92,7 +92,7 @@ async def get_gliders():
                                     , cast(f.flight_points as float) [xc]
                         FROM flights f 
                         INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE                       
-                    LIMIT 1000 """), db, params=param)
+                    """), db, params=param)
             
         df = df.groupby(['glider_norm','class'])['xc'].agg([
             ('count', len),

@@ -10,9 +10,11 @@
 <form action="/pilots" method="post" class="w3-container" autocomplete="off">
     <input type="submit" value="Load more pilots" class="w3-button"  />
 </form>
-<!-- <form action="/pilots/delete" method="post" class="w3-container" autocomplete="off">
+{% if allow_delete %}
+<form action="/pilots/delete" method="post" class="w3-container" autocomplete="off">
     <input type="submit" value="Delete all pilots" class="w3-button"  />
-</form> -->
+</form>
+{% endif %}
 
 
 <table class="w3-table w3-bordered">

@@ -50,7 +50,9 @@ def load_pilots_page(driver,target_url:str):
     from selenium.common.exceptions import TimeoutException
 
     pilots, page_source = [], ""
-    driver.implicitly_wait(2)
+    #driver.implicitly_wait(2)
+    driver.get("https://google.com") # make sure reload?
+    driver.implicitly_wait(0.5)
     driver.get(target_url)
     try:        
         wait=WebDriverWait(driver, WEBDRIVER_WAIT)
@@ -59,8 +61,6 @@ def load_pilots_page(driver,target_url:str):
         page_source = driver.page_source
     except TimeoutException:    
             print("Timeout occurred for", target_url)
-    #finally:
-    #    driver.quit() # ?
 
     if page_source:
         soup = BeautifulSoup(page_source, 'html.parser')

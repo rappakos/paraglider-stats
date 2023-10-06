@@ -13,27 +13,39 @@ CREATE TABLE IF NOT EXISTS gliders
 
 
 CREATE TEMPORARY TABLE temp_gliders(glider, class, glider_norm);
-INSERT INTO temp_gliders(glider,class,glider_norm)
+INSERT INTO temp_gliders(glider,glider_norm,class)
 VALUES
-('OZONE Alpina 4','C','OZONE Alpina 4'),
-('OZONE Photon','C','OZONE Photon'),
-('AIRDESIGN Volt 4','C','AIRDESIGN Volt 4'),
-('NIVIUK Artik R','C','NIVIUK Artik R'),
-('OZONE Delta 4','C','OZONE Delta 4'),
-('ADVANCE Sigma 11','C','ADVANCE Sigma 11'),
-('NOVA MENTOR 7 light','B','NOVA MENTOR 7 light'),
-('FLOW PARAGLIDERS Fusion','C','FLOW PARAGLIDERS Fusion'),
-('NIVIUK Artik 6','C','NIVIUK Artik 6'),
-('ADVANCE Iota DLS','B','ADVANCE Iota DLS'),
-('OZONE Rush 6','B','OZONE Rush 6'),
-('SUPAIR Savage','C','SUPAIR Savage'),
-('SKYWALK Mint','C','SKYWALK Mint'),
-('GIN GLIDERS Bonanza 2','C','GIN GLIDERS Bonanza 2'),
-('GIN GLIDERS Bonanza 3','C','GIN GLIDERS Bonanza 3'),
-('OZONE SwiftSix','B','OZONE SwiftSix'),
-('OZONE Delta 3','C','OZONE Delta 3'),
-('OZONE Alpina 3','C','OZONE Alpina 3'),
-('PHI Maestro 2 light','C','PHI Maestro 2 light');
+('OZONE Alpina 4','OZONE Alpina 4','C'),
+('OZONE Photon','OZONE Photon','C'),
+('AIRDESIGN Volt 4','AIRDESIGN Volt 4','C'),
+('NIVIUK Artik R','NIVIUK Artik R','C'),
+('OZONE Delta 4','OZONE Delta 4','C'),
+('ADVANCE Sigma 11','ADVANCE Sigma 11','C'),
+('NOVA MENTOR 7 light','NOVA MENTOR 7 light','B'),
+('FLOW PARAGLIDERS Fusion','FLOW Fusion','C'),
+('NIVIUK Artik 6','NIVIUK Artik 6','C'),
+('ADVANCE Iota DLS','ADVANCE Iota DLS','B'),
+('OZONE Rush 6','OZONE Rush 6','B'),
+('SUPAIR Savage','SUPAIR Savage','C'),
+('SKYWALK Mint','SKYWALK Mint','C'),
+('GIN GLIDERS Bonanza 2','GIN Bonanza 2','C'),
+('GIN GLIDERS Bonanza 3','GIN Bonanza 3','C'),
+('OZONE SwiftSix','OZONE SwiftSix','B'),
+('OZONE Delta 3','OZONE Delta 3','C'),
+('OZONE Alpina 3','OZONE Alpina 3','C'),
+('PHI Maestro 2 light','PHI Maestro 2 light','B'),
+('OZONE Swift 5','OZONE Swift 5','B'),
+('ADVANCE Sigma 10','ADVANCE Sigma 10','C'),
+('GIN GLIDERS Camino','GIN Camino','C'),
+('GIN GLIDERS Explorer 2','GIN Explorer 2','B'),
+('PHI Allegro X-alps','PHI Allegro X-alps','C'),
+('NIVIUK Ikuma 2','NIVIUK Ikuma 2','B'),
+('SKYWALK Chili 5','SKYWALK Chili 5','B'),
+('OZONE Rush 5','OZONE Rush 5','B'),
+('PHI Maestro 2','PHI Maestro 2','B'),
+('BGD Base 2','BGD Base 2','B');
+
+--DELETE FROM gliders;
 
 INSERT INTO gliders (glider, class, glider_norm)
 SELECT t.glider, t.class, t.glider_norm
