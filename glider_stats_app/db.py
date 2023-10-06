@@ -1,5 +1,6 @@
 # db.py
 import aiosqlite
+from sqlalchemy import create_engine,text
 
 DB_NAME = './glider_stats.db'
 INIT_SCRIPT = './glider_stats_app/init_db.sql'
@@ -69,24 +70,43 @@ async def get_unclassed_gliders():
                     })
         return gliders
 
+
+def lognormal_1( mu, sigma):
+    import math
+    return 0.5*(1.0 + math.erf(mu/sigma/math.sqrt(2.0)))
+
 async def get_gliders():
-        year = 2023
-        gliders = []
-        async with aiosqlite.connect(DB_NAME) as db:
+        import math
+        import pandas as pd
+        import numpy as np
+
+        year, point_goal, min_count = 2023, 100.0, 50
+
+        engine = create_engine(f'sqlite:///{DB_NAME}')
+        with engine.connect() as db:
             param = {'year':year}
-            async with db.execute("""SELECT g.glider_norm, g.class, count(*) [count]
-                    FROM flights f 
-                    INNER JOIN gliders g WHERE g.glider=f.glider COLLATE NOCASE
-                    GROUP BY g.glider_norm  
-                    ORDER BY count(*) DESC
-                    LIMIT 50 """,param) as cursor:
-                async for row in cursor:
-                    gliders.append({
-                        'glider_norm': row[0],
-                        'class': row[1],
-                        'flight_count':  row[2]
-                    })
-        return gliders
+            df  = pd.read_sql_query(text("""
+                        SELECT 
+                                    g.glider_norm
+                                    , g.class
+                                    , cast(f.flight_points as float) [xc]
+                        FROM flights f 
+                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE                       
+                    LIMIT 1000 """), db, params=param)
+            
+        df = df.groupby(['glider_norm','class'])['xc'].agg([
+            ('count', len),
+            ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
+            ('sigma', lambda value: np.std(np.log(value/point_goal)) )
+        ])
+
+        df['p100'] = df.apply(lambda row: lognormal_1(row.mu,row.sigma), axis=1)
+        df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
+        #print(df.columns)
+        df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
+        print(df.head(10))
+
+        return df.reset_index().to_dict('records')
 
 
 async def get_pilots():

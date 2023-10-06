@@ -7,3 +7,4 @@ xlsxwriter
 bs4
 python-dotenv
 webdriver-manager
+sqlalchemy

@@ -8,7 +8,7 @@
 <div class="w3-row">
 
     
-    <div class="w3-container w3-half">
+    <div class="w3-container w3-twothird">
         <h3>Classified</h3>
 
         <table class="w3-table w3-bordered">
@@ -16,19 +16,27 @@
                 <th>Glider</th>
                 <th>Class</th>
                 <th>Count</th>
+                <th>Log-Normal mu</th>
+                <th>Log-Normal sigma</th>
+                <th>P( xc &gt;= 100 )</th>
+                <th>P( xc &gt;= 200 )</th>
             </tr>
             {% for glider in gliders %}
             <tr>
                 <td>{{ glider.glider_norm }}</td>
                 <td>{{ glider.class }}</td>
-                <td>{{ glider.flight_count }}</td>
+                <td>{{ glider.count }}</td>
+                <td>{{ glider.mu }}</td>
+                <td>{{ glider.sigma }}</td>
+                <td>{{ (glider.p100*100)|round|int }} %</td>
+                <td>{{ (glider.p200*100)|round|int }} %</td>
             </tr>    
             {% endfor %}
         </table>
     </div>
 
 
-    <div class="w3-container w3-half">
+    <div class="w3-container w3-third">
         <h3>Top unclassified</h3>
         <table class="w3-table w3-bordered">
             <tr>
