@@ -109,6 +109,53 @@ async def get_gliders():
 
         return df.reset_index().to_dict('records')
 
+async def get_glider(glider:str):
+    import math
+    import pandas as pd
+    import numpy as np
+
+    year,point_goal = 2023, 100
+    async with aiosqlite.connect(DB_NAME) as db:
+        param = {'year':year,'glider_safe':glider.replace("-"," ")}
+        glider_norm, g_class, g_count, p_count, points = None, None, 0,0,[]
+        async with db.execute("""SELECT g.glider_norm, g.class
+                            , count(*) [count]
+                            , count(distinct p.pilot_id) [pilot_count]
+                    FROM pilots p
+                    INNER JOIN flights f ON f.pilot_id=p.pilot_id
+                    INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE       
+                    WHERE p.[year]= :year
+                        and g.glider_norm = :glider_safe COLLATE NOCASE  
+                    GROUP BY  g.glider_norm """,param) as cursor:
+            async for row in cursor:
+                glider_norm=row[0]
+                g_class = row[1]
+                g_count = row[2]
+                p_count= row[3]
+        if glider_norm:
+            async with db.execute("""SELECT cast(f.flight_points as float) [xc]
+                    FROM pilots p
+                    INNER JOIN flights f ON f.pilot_id=p.pilot_id
+                    INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE       
+                    WHERE p.[year]= :year
+                        and g.glider_norm = :glider_safe COLLATE NOCASE 
+                    ORDER BY cast(f.flight_points as float) ASC """,param) as cursor:
+             async for row in cursor:
+                 points.append(row[0])
+
+        #print(points)
+        logp = [math.log(p/point_goal) for p in points]
+        mu, sigma = np.mean(logp), np.std(logp)
+
+
+    return {
+        'glider_norm': glider_norm,
+        'class': g_class,
+        'count': g_count,
+        'pilot_count': p_count,
+        'mu': mu,
+        'sigma': sigma
+    }
 
 async def get_pilots():
     year = 2023 # TODO pass as param?

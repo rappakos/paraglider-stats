@@ -31,7 +31,7 @@
             </tr>
             {% for glider in gliders %}
             <tr>
-                <td>{{ glider.glider_norm }}</td>
+                <td><a href="/gliders/{{ glider.glider_norm.lower().replace(' ','-') }}">{{ glider.glider_norm }}</a></td>
                 <td>{{ glider.class }}</td>
                 <td>{{ glider.count }}</td>
                 <td>{{  '{0:0.4f}'.format(glider.mu) }}</td>

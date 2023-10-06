@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% set title =  glider_norm %}
+
+{% block content %}
+ 
+<p>{{ glider_norm }} - {{ class }}</p>
+<p>Flights: {{ count }}</p>
+<p>Pilots:  {{ pilot_count }} </p>
+<hr />
+<p>mu: {{ '{0:0.4f}'.format(mu) }}</p>
+<p>sigma:  {{ '{0:0.4f}'.format(sigma) }} </p>
+<hr />
+
+{% endblock %}

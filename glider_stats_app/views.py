@@ -55,3 +55,11 @@ async def gliders(request):
             'unclass_gliders':unclass_gliders,
             'gliders':gliders
         }
+
+@aiohttp_jinja2.template('glider.html')
+async def glider(request):
+    glider = request.match_info['glider']
+
+    data = await db.get_glider(glider)
+
+    return data
