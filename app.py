@@ -23,6 +23,7 @@ async def init_app(argv=None):
     app = web.Application()
 
     #app['config'] = get_config(argv)
+    app.config = CONFIG
 
     # setup Jinja2 template renderer
     aiohttp_jinja2.setup(

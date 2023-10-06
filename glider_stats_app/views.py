@@ -25,7 +25,7 @@ async def pilots(request):
     pilots = await db.get_pilots()
     #print(pilots)
     return  {'pilots':pilots,
-            'allow_delete': 'ALLOW_DELETE' in os.environ and os.environ['ALLOW_DELETE'] }
+            'allow_delete': request.app.config.ALLOW_DELETE }
 
 async def load_pilots(request):
     if request.method == 'POST':
