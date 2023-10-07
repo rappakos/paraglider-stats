@@ -75,7 +75,7 @@ def lognormal_1( mu, sigma):
     import math
     return 0.5*(1.0 + math.erf(mu/sigma/math.sqrt(2.0)))
 
-async def get_gliders():
+async def get_gliders(glider:str, g_class:str):
         import math
         import pandas as pd
         import numpy as np
@@ -85,15 +85,18 @@ async def get_gliders():
         engine = create_engine(f'sqlite:///{DB_NAME}')
         with engine.connect() as db:
             param = {'year':year}
-            df  = pd.read_sql_query(text("""
+            #print(param)
+            df  = pd.read_sql_query(text(f"""
                         SELECT 
                                     g.glider_norm
                                     , g.class
                                     , cast(f.flight_points as float) [xc]
                         FROM flights f 
-                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE                       
+                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                        WHERE (LOWER(g.glider_norm) like '%{glider.lower()}%' AND LOWER(g.class) like '%{g_class.lower()}%')
                     """), db, params=param)
-            
+        #print(df.head())    
+        
         df = df.groupby(['glider_norm','class'])['xc'].agg([
             ('count', len),
             ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
@@ -105,7 +108,7 @@ async def get_gliders():
         df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
         #print(df.columns)
         df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
-        print(df.head(10))
+        #print(df.head(10))
 
         return df.reset_index().to_dict('records')
 

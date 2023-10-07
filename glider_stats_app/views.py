@@ -48,8 +48,10 @@ async def delete_pilots(request):
 
 @aiohttp_jinja2.template('gliders.html')
 async def gliders(request):
+    glider, g_class = request.rel_url.query.get('glider',''), request.rel_url.query.get('class','')
+    #print(glider, g_class)
     unclass_gliders = await db.get_unclassed_gliders()
-    gliders = await db.get_gliders()
+    gliders = await db.get_gliders(glider=glider, g_class=g_class)
 
     return {
             'unclass_gliders':unclass_gliders,
