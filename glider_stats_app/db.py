@@ -151,7 +151,7 @@ async def get_glider(glider:str):
 
         #print(points)
         logp = [math.log(p/point_goal) for p in points]
-        mu, sigma = np.mean(logp), np.std(logp)
+        mu, sigma, mu_std, sigma_std = np.mean(logp), np.std(logp), np.mean(points), np.std(points)
 
         # plot - TODO check if dash module is simpler
         fig = px.scatter( x=points, y=np.arange(len(points)))
@@ -159,6 +159,10 @@ async def get_glider(glider:str):
         fig.add_trace(go.Scatter(x=xrange, \
                                 y= [len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
                                 mode='lines', showlegend=False ))
+        #fig.add_trace(go.Scatter(x=xrange, \
+        #                        y= [len(points)*0.5*(1.0+math.erf(((x) - mu_std)/sigma_std/math.sqrt(2.0) )) for x in xrange], \
+        #                        mode='lines', \
+        #                        line = dict(shape = 'linear', color = 'orange', dash = 'dash'), showlegend=False ))        
 
         fig.update_xaxes(title='xc points',range=[0,500])
         fig.update_yaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
