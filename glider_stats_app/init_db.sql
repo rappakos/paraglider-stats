@@ -43,7 +43,33 @@ VALUES
 ('SKYWALK Chili 5','SKYWALK Chili 5','B'),
 ('OZONE Rush 5','OZONE Rush 5','B'),
 ('PHI Maestro 2','PHI Maestro 2','B'),
-('BGD Base 2','BGD Base 2','B');
+('BGD Base 2','BGD Base 2','B'),
+('ADVANCE Iota 2','ADVANCE Iota 2','B'),
+('BGD Cure 2','BGD Cure 2','C'),
+('PHI Maestro','PHI Maestro','B'),
+('NIVIUK Artik 5','NIVIUK Artik 5','C'),
+('ADVANCE XI','ADVANCE XI','B'),
+('SKYWALK Arak','SKYWALK Arak','B'),
+('SKYWALK Arak Air','SKYWALK Arak Air','B'),
+('MAC PARA Eden 7','MACPARA Eden 7','B'),
+('AIRDESIGN Soar','AIRDESIGN Soar','B'),
+('AXIS Venus SC','AXIS Venus SC','C'),
+('GIN GLIDERS Explorer','GIN Explorer','B'),
+('PHI Maestro X-alps','PHI Maestro X-alps','B'),
+('TRIPLE SEVEN Rook 3','777 Rook 3','B'),
+('NOVA Sector','NOVA Sector','C'),
+('NOVA Mentor 5','NOVA Mentor 5','B'),
+('FLOW PARAGLIDERS Fusion Light','FLOW Fusion Light','C'),
+('ADVANCE Epsilon 9','ADVANCE Epsilon 9','B'),
+('UP Trango X-race','UP Trango X-race','C'),
+('SKYWALK Chili 4','SKYWALK Chili 4','B'),
+('MAC PARA Elan 3','MACPARA Elan 3','C'),
+('BGD Base 2 Lite','BGD Base 2 Lite','B'),
+('SKYWALK Cayenne 6','SKYWALK Cayenne 6','C'),
+('TRIPLE SEVEN Queen 2','777 Queen 2','C'),
+('OZONE Delta 2','OZONE Delta 2','C'),
+('PHI Beat Light','PHI Beat Light','B');
+
 
 --DELETE FROM gliders;
 
