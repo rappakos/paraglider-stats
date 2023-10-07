@@ -68,7 +68,17 @@ VALUES
 ('SKYWALK Cayenne 6','SKYWALK Cayenne 6','C'),
 ('TRIPLE SEVEN Queen 2','777 Queen 2','C'),
 ('OZONE Delta 2','OZONE Delta 2','C'),
-('PHI Beat Light','PHI Beat Light','B');
+('PHI Beat Light','PHI Beat Light','B'),
+('AIRDESIGN Rise 4','AIRDESIGN Rise 4','B'),
+('ADVANCE Iota','ADVANCE Iota','B'),
+('PHI Allegro','PHI Allegro','C'),
+('NIVIUK Ikuma 2 P','NIVIUK Ikuma 2 P','B'),
+('NOVA Mentor 6','NOVA Mentor 6','B'),
+('UP Trango X','UP Trango X','C'),
+('NIVIUK Hook 5','NIVIUK Hook 5','B'),
+('AIRDESIGN Volt 3','AIRDESIGN Volt 3','C'),
+('BGD Cure','BGD Cure','C'),
+('SKYWALK Cumeo','SKYWALK Cumeo','B');
 
 
 --DELETE FROM gliders;
