@@ -28,6 +28,9 @@ async def pilots(request):
             'allow_delete': request.app.config.ALLOW_DELETE }
 
 async def load_pilots(request):
+    if not request.app.config.START_DRIVER:
+        raise redirect(request.app.router, 'pilots')
+
     if request.method == 'POST':
         # get next batch
         max_rank = await db.get_max_rank()
