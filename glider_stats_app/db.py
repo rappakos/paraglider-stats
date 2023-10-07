@@ -114,13 +114,19 @@ async def get_gliders(glider:str, g_class:str):
 
         return df
 
+def map_fig_to_b64(fig):
+    from base64 import b64encode
+
+    img_bytes = fig.to_image(format="png")
+    encoding = b64encode(img_bytes).decode()
+    return "data:image/png;base64," + encoding
+
 async def get_glider(glider:str):
     import math
     import pandas as pd
     import numpy as np
     import plotly.express as px
     import plotly.graph_objects as go
-    from base64 import b64encode
     from scipy import special
 
     year,point_goal = 2023, 100
@@ -166,19 +172,24 @@ async def get_glider(glider:str):
         fig.update_xaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
         fig.update_yaxes(title='xc points',range=[0,500])
 
-        img_bytes = fig.to_image(format="png")
-        encoding = b64encode(img_bytes).decode()
-        img_b64 = "data:image/png;base64," + encoding
+        img_b64 = map_fig_to_b64(fig)
 
         # plot #2
-        fig2 = px.scatter( x=[mu+sigma*math.sqrt(2.0)*special.erfinv(2.0*p/len(points)-1.0) for p in np.arange(len(points))], y=logp)
-        fig2.add_trace(go.Scatter(x=np.arange(-3,4), y= np.arange(-3,4), mode='lines', showlegend=False ))
-        fig2.update_xaxes(title='mu + sigma * sqrt2 * erf-inv (2 * flight number / number of flights + 1)',range=[-3,3])
+        fig2 = px.scatter( x=np.arange(len(points)), y=logp)
+        fig2.add_trace(go.Scatter(x=[len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
+                                y=[math.log(x/point_goal)  for x in xrange], \
+                                mode='lines', showlegend=False ))
+        fig2.update_xaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
         fig2.update_yaxes(title='log(xc points/100)',range=[-3,3])
+        img2_b64 = map_fig_to_b64(fig2)
 
-        img2_bytes = fig2.to_image(format="png")
-        encoding = b64encode(img2_bytes).decode()
-        img2_b64 = "data:image/png;base64," + encoding
+        # plot #3
+        fig3 = px.scatter( x=[mu+sigma*math.sqrt(2.0)*special.erfinv(2.0*p/len(points)-1.0) for p in np.arange(len(points))], y=logp)
+        fig3.add_trace(go.Scatter(x=np.arange(-3,4), y= np.arange(-3,4), mode='lines', showlegend=False ))
+        fig3.update_xaxes(title='mu + sigma * sqrt2 * erf-inv (2 * flight number / number of flights + 1)',range=[-3,3])
+        fig3.update_yaxes(title='log(xc points/100)',range=[-3,3])
+
+        img3_b64 = map_fig_to_b64(fig3)
 
     return {
         'glider_norm': glider_norm,
@@ -188,7 +199,8 @@ async def get_glider(glider:str):
         'mu': mu,
         'sigma': sigma,
         'img_b64': img_b64,
-        'img2_b64':img2_b64
+        'img2_b64':img2_b64,
+        'img3_b64':img3_b64
     }
 
 async def get_comparison(compare):
@@ -197,7 +209,6 @@ async def get_comparison(compare):
         import numpy as np   
         import plotly.express as px
         import plotly.graph_objects as go
-        from base64 import b64encode
         from scipy import special
 
         year, point_goal = 2023, 100.0
@@ -235,14 +246,8 @@ async def get_comparison(compare):
             fig.update_yaxes(title='log(xc points/100)',range=[-3,3])
             #fig.update_yaxes(title='flight number/number of flights',range=[0,1])
             fig.update_xaxes(title='erf inv (flight number/number of flights)',range=[-3,3])
-            
-        
 
-        img_bytes = fig.to_image(format="png")
-
-        encoding = b64encode(img_bytes).decode()
-        
-        return "data:image/png;base64," + encoding
+        return map_fig_to_b64(fig)
 
 
 async def get_pilots():
