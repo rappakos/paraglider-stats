@@ -50,19 +50,21 @@ async def get_main_counts():
 
     return  year, pilots, flights, gliders  
 
-async def get_unclassed_gliders():
+async def get_unclassed_gliders(glider:str):
         year = 2023
         gliders = []
+        #print(glider)
         async with aiosqlite.connect(DB_NAME) as db:
             param = {'year':year}
-            async with db.execute("""SELECT f.glider, count(*) [count]
+            async with db.execute(f"""SELECT f.glider, count(*) [count]
                     FROM flights f 
                     WHERE NOT EXISTS (SELECT 1 FROM gliders g WHERE g.glider=f.glider COLLATE NOCASE)
                         AND f.glider <> ''
+                        AND LOWER(f.glider) like '%{glider.lower()}%'
                     GROUP BY f.glider  
-                    HAVING count(*) > 10
+                    --HAVING count(*) >= 10
                     ORDER BY count(*) DESC
-                    LIMIT 20 """,param) as cursor:
+                    LIMIT 10 """,param) as cursor:
                 async for row in cursor:
                     gliders.append({
                         'glider': row[0],

@@ -67,11 +67,12 @@ async def gliders(request):
     import pandas as pd
     from datetime import datetime
 
-    glider, g_class, compare = request.rel_url.query.get('glider',''), \
+    glider, g_class, unclass, compare = request.rel_url.query.get('glider',''), \
                                request.rel_url.query.get('class',''), \
-                               [g for g in request.rel_url.query.keys() if g not in ['glider','class','export']]
+                               request.rel_url.query.get('unclass',''), \
+                               [g for g in request.rel_url.query.keys() if g not in ['glider','class','export','unclass']]
     #print(compare)
-    unclass_gliders = await db.get_unclassed_gliders()
+    unclass_gliders = await db.get_unclassed_gliders(unclass)
     df = await db.get_gliders(glider=glider, g_class=g_class)
     
     comparison = await db.get_comparison(compare) if compare else None
