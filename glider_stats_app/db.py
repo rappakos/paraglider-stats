@@ -152,31 +152,27 @@ async def get_glider(glider:str):
 
         #print(points)
         logp = [math.log(p/point_goal) for p in points]
-        mu, sigma, mu_std, sigma_std = np.mean(logp), np.std(logp), np.mean(points), np.std(points)
-
+        mu, sigma = np.mean(logp), np.std(logp)
         # plot - TODO check if dash module is simpler
-        fig = px.scatter( x=points, y=np.arange(len(points)))
+        fig = px.scatter( x=np.arange(len(points)), y=points)
         xrange = np.arange(1,500)
-        fig.add_trace(go.Scatter(x=xrange, \
-                                y= [len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
+        fig.add_trace(go.Scatter(x= [len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
+                                y=xrange, \
                                 mode='lines', showlegend=False ))
-        #fig.add_trace(go.Scatter(x=xrange, \
-        #                        y= [len(points)*0.5*(1.0+math.erf(((x) - mu_std)/sigma_std/math.sqrt(2.0) )) for x in xrange], \
-        #                        mode='lines', \
-        #                        line = dict(shape = 'linear', color = 'orange', dash = 'dash'), showlegend=False ))        
+      
 
-        fig.update_xaxes(title='xc points',range=[0,500])
-        fig.update_yaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
+        fig.update_xaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
+        fig.update_yaxes(title='xc points',range=[0,500])
 
         img_bytes = fig.to_image(format="png")
         encoding = b64encode(img_bytes).decode()
         img_b64 = "data:image/png;base64," + encoding
 
         # plot #2
-        fig2 = px.scatter( x=logp, y=[mu+sigma*math.sqrt(2.0)*special.erfinv(2.0*p/len(points)-1.0) for p in np.arange(len(points))])
+        fig2 = px.scatter( x=[mu+sigma*math.sqrt(2.0)*special.erfinv(2.0*p/len(points)-1.0) for p in np.arange(len(points))], y=logp)
         fig2.add_trace(go.Scatter(x=np.arange(-3,4), y= np.arange(-3,4), mode='lines', showlegend=False ))
-        fig2.update_xaxes(title='log(xc points/100)',range=[-3,3])
-        fig2.update_yaxes(title='mu + sigma * sqrt2 * erf-inv (2 * flight number / number of flights + 1)',range=[-3,3])
+        fig2.update_xaxes(title='mu + sigma * sqrt2 * erf-inv (2 * flight number / number of flights + 1)',range=[-3,3])
+        fig2.update_yaxes(title='log(xc points/100)',range=[-3,3])
 
         img2_bytes = fig2.to_image(format="png")
         encoding = b64encode(img2_bytes).decode()
@@ -230,13 +226,13 @@ async def get_comparison(compare):
 
         raw=False
         if raw:
-            fig = px.scatter( df, x='xc', y='y', color='glider')
-            fig.update_yaxes(title='flight number/number of flights',range=[0,1])
+            fig = px.scatter( df, x='y', y='xc', color='glider')
+            fig.update_xaxes(title='flight number/number of flights',range=[0,1])
         else:
-            fig = px.scatter( df, x='x', y='ybar', color='glider')
-            fig.update_xaxes(title='log(xc points/100)',range=[-3,3])
+            fig = px.scatter( df, x='ybar', y='x', color='glider')
+            fig.update_yaxes(title='log(xc points/100)',range=[-3,3])
             #fig.update_yaxes(title='flight number/number of flights',range=[0,1])
-            fig.update_yaxes(title='erf inv (flight number/number of flights)',range=[-3,3])
+            fig.update_xaxes(title='erf inv (flight number/number of flights)',range=[-3,3])
             
         
 
