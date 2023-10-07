@@ -7,7 +7,7 @@ from config import DefaultConfig
 
 XCONTEST_PAGE_SIZE = 50 
 XCONTEST_BASE_URL = 'https://www.xcontest.org'
-WEBDRIVER_WAIT = 3
+WEBDRIVER_WAIT = 30
 
 XCONTEST_CTG = {
     2022: 5036,
@@ -52,8 +52,9 @@ def load_pilots_page(driver,target_url:str):
     pilots, page_source = [], ""
     #driver.implicitly_wait(2)
     driver.get("https://google.com") # make sure reload?
-    driver.implicitly_wait(0.5)
+    driver.implicitly_wait(2)
     driver.get(target_url)
+    driver.implicitly_wait(2)
     try:        
         wait=WebDriverWait(driver, WEBDRIVER_WAIT)
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "ol.XCrank"))) # need to make sure a new page is always replaced?!
