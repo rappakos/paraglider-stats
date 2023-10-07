@@ -55,7 +55,11 @@ async def gliders(request):
 
     return {
             'unclass_gliders':unclass_gliders,
-            'gliders':gliders
+            'gliders':gliders,
+            'filter': {
+                'glider':glider,
+                'class':g_class
+            }
         }
 
 @aiohttp_jinja2.template('glider.html')

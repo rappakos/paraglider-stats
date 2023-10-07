@@ -10,7 +10,8 @@
     
     <div class="w3-container w3-twothird">
         <h3>Classified</h3>
-
+        <form action="/gliders" method="get" class="w3-container" autocomplete="off">
+            <input type="submit" value="Filter table" class="w3-button"  />
         <table class="w3-table w3-bordered">
             <tr>
                 <th>Glider</th>
@@ -20,8 +21,8 @@
                 <th colspan="3">P( xc &gt;= X )</th>
             </tr>
             <tr>
-                <th></th>
-                <th></th>
+                <th><input id="glider" name="glider" type="text" value="{{filter.glider}}" /></th>
+                <th><input id="class" name="class" type="text" value="{{filter.class}}" /></th>
                 <th></th>
                 <th>mu</th>
                 <th>sigma</th>
@@ -42,6 +43,7 @@
             </tr>    
             {% endfor %}
         </table>
+        </form>
     </div>
 
 
