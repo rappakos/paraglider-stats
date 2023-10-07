@@ -114,6 +114,7 @@ async def get_glider(glider:str):
     import pandas as pd
     import numpy as np
     import plotly.express as px
+    import plotly.graph_objects as go
     from base64 import b64encode
 
     year,point_goal = 2023, 100
@@ -149,9 +150,17 @@ async def get_glider(glider:str):
         logp = [math.log(p/point_goal) for p in points]
         mu, sigma = np.mean(logp), np.std(logp)
 
-        # plot
-        fig = px.scatter(x=points, y=np.arange(len(points)))
+        # plot - TODO check if dash module is simpler
+        fig = px.scatter( x=points, y=np.arange(len(points)))
+        xrange = np.arange(1,500)
+        fig.add_trace(go.Scatter(x=xrange, \
+                                y= [len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
+                                mode='lines', showlegend=False ))
+
+        fig.update_xaxes(title='xc points',range=[0,500])
+        fig.update_yaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
         img_bytes = fig.to_image(format="png")
+
         encoding = b64encode(img_bytes).decode()
         img_b64 = "data:image/png;base64," + encoding
 
