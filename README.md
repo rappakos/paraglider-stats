@@ -5,12 +5,12 @@ Tool to download paraglider flights (eg from xcontest) and evaluate them
 
 ### Initial setup
 
-0 Check out the project
-1 Set up env file: Make a copy of `template.env` and rename to `.env`
-2 Install requirements: In a terminal run `python -m pip install -r requirements.txt`
-3 Start app: In a terminal run `python app.py`
-4 Navigate to the app [http://localhost:3978](http://localhost:3978)
-5 Go to the `pilots`, get data
+0. Check out the project
+1. Set up env file: Make a copy of `template.env` and rename to `.env`
+2. Install requirements: In a terminal run `python -m pip install -r requirements.txt`
+3. Start app: In a terminal run `python app.py`
+4. Navigate to the app [http://localhost:3978](http://localhost:3978)
+5. Go to the `pilots`, get data
 
 
 ## Data 
