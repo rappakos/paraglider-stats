@@ -8,10 +8,23 @@
 <div class="w3-row">
    
     <div class="w3-container w3-half">
+        <details>
+            <summary>
+            Notes for the table.
+            </summary>
+            Table of all gliders that have at least 50 flights.
+            Statistics for gliders with less than 200 flights are less reliable.
+            Unlcassified (no normalized glider name) are not included.
+        </details>
+        <hr />
         <form action="/gliders" method="get" class="w3-container" autocomplete="off">
             <button type="submit" class="btn btn-success" >
              <i class="fa fa-filter"></i> Filter table
             </button>
+        <br />
+        <input type="checkbox" name="export" id ="export" />
+        <label for="export">Export to excel</label>
+
         <table class="w3-table w3-bordered">
             <tr>
                 <th></th>

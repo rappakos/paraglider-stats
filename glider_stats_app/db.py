@@ -110,7 +110,7 @@ async def get_gliders(glider:str, g_class:str):
         df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
         #print(df.head(10))
 
-        return df.reset_index().to_dict('records')
+        return df
 
 async def get_glider(glider:str):
     import math
