@@ -12,4 +12,9 @@
 <p>sigma:  {{ '{0:0.4f}'.format(sigma) }} </p>
 <hr />
 
+{% if img_b64 %}
+<img src="{{img_b64}}"/>
+{% endif %}
+
+
 {% endblock %}

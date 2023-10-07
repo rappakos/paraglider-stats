@@ -113,6 +113,8 @@ async def get_glider(glider:str):
     import math
     import pandas as pd
     import numpy as np
+    import plotly.express as px
+    from base64 import b64encode
 
     year,point_goal = 2023, 100
     async with aiosqlite.connect(DB_NAME) as db:
@@ -147,6 +149,12 @@ async def get_glider(glider:str):
         logp = [math.log(p/point_goal) for p in points]
         mu, sigma = np.mean(logp), np.std(logp)
 
+        # plot
+        fig = px.scatter(x=points, y=np.arange(len(points)))
+        img_bytes = fig.to_image(format="png")
+        encoding = b64encode(img_bytes).decode()
+        img_b64 = "data:image/png;base64," + encoding
+
 
     return {
         'glider_norm': glider_norm,
@@ -154,7 +162,8 @@ async def get_glider(glider:str):
         'count': g_count,
         'pilot_count': p_count,
         'mu': mu,
-        'sigma': sigma
+        'sigma': sigma,
+        'img_b64': img_b64
     }
 
 async def get_pilots():
