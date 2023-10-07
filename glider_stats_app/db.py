@@ -215,7 +215,15 @@ async def get_comparison(compare):
         df['x'] = df.apply(lambda row: math.log(row.xc/point_goal) , axis=1)
         df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider] , axis=1)
 
-        fig = px.scatter( df, x='xc', y='y', color='glider')
+        raw=False
+        if raw:
+            fig = px.scatter( df, x='xc', y='y', color='glider')
+        else:
+            fig = px.scatter( df, x='x', y='y', color='glider')
+            fig.update_xaxes(title='log(xc points/100)',range=[-2,2])
+            
+        fig.update_yaxes(title='flight number/number of flights',range=[0,1])
+
         img_bytes = fig.to_image(format="png")
 
         encoding = b64encode(img_bytes).decode()
