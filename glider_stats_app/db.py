@@ -62,7 +62,7 @@ async def get_unclassed_gliders():
                     GROUP BY f.glider  
                     HAVING count(*) > 10
                     ORDER BY count(*) DESC
-                    LIMIT 5 """,param) as cursor:
+                    LIMIT 20 """,param) as cursor:
                 async for row in cursor:
                     gliders.append({
                         'glider': row[0],
