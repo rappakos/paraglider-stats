@@ -10,3 +10,4 @@ webdriver-manager
 sqlalchemy
 plotly
 kaleido
+scipy

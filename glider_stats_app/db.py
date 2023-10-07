@@ -189,6 +189,7 @@ async def get_comparison(compare):
         import plotly.express as px
         import plotly.graph_objects as go
         from base64 import b64encode
+        from scipy import special
 
         year, point_goal = 2023, 100.0
 
@@ -214,15 +215,19 @@ async def get_comparison(compare):
         #print(aggr)
         df['x'] = df.apply(lambda row: math.log(row.xc/point_goal) , axis=1)
         df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider] , axis=1)
+        df['ybar'] = df.apply(lambda row: math.sqrt(2.0)*special.erfinv(2.0*(row.row_num/aggr['count'][row.glider]-0.5)) , axis=1)
 
         raw=False
         if raw:
             fig = px.scatter( df, x='xc', y='y', color='glider')
+            fig.update_yaxes(title='flight number/number of flights',range=[0,1])
         else:
-            fig = px.scatter( df, x='x', y='y', color='glider')
-            fig.update_xaxes(title='log(xc points/100)',range=[-2,2])
+            fig = px.scatter( df, x='x', y='ybar', color='glider')
+            fig.update_xaxes(title='log(xc points/100)',range=[-3,3])
+            #fig.update_yaxes(title='flight number/number of flights',range=[0,1])
+            fig.update_yaxes(title='erf inv (flight number/number of flights)',range=[-3,3])
             
-        fig.update_yaxes(title='flight number/number of flights',range=[0,1])
+        
 
         img_bytes = fig.to_image(format="png")
 
