@@ -194,7 +194,7 @@ async def get_comparison(compare):
             #print(param)
             comp_list = "','".join([c.replace('-',' ') for c in compare])
             df  = pd.read_sql_query(text(f"""
-                        SELECT  g.glider_norm
+                        SELECT  g.glider_norm [glider]
                                     , cast(f.flight_points as float) [xc]
                                     , row_number() over(partition by g.glider_norm order by  cast(f.flight_points as float)  ) [row_num]
                         FROM flights f 
@@ -202,15 +202,16 @@ async def get_comparison(compare):
                         WHERE LOWER(g.glider_norm) in ('{comp_list}') 
                     """), db, params=param)
 
-        aggr = df.groupby(['glider_norm'])['xc'].agg([
+        aggr = df.groupby(['glider'])['xc'].agg([
             ('count', len),
             ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
             ('sigma', lambda value: np.std(np.log(value/point_goal)) )
         ]).to_dict()
         #print(aggr)
-        df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider_norm] , axis=1)
+        df['x'] = df.apply(lambda row: math.log(row.xc/point_goal) , axis=1)
+        df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider] , axis=1)
 
-        fig = px.scatter( df, x='xc', y='y', color='glider_norm')
+        fig = px.scatter( df, x='xc', y='y', color='glider')
         img_bytes = fig.to_image(format="png")
 
         encoding = b64encode(img_bytes).decode()
