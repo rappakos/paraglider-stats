@@ -7,7 +7,7 @@
 
 <div class="w3-row">
    
-    <div class="w3-container w3-twothird">
+    <div class="w3-container w3-half">
         <form action="/gliders" method="get" class="w3-container" autocomplete="off">
             <button type="submit" class="btn btn-success" >
              <i class="fa fa-filter"></i> Filter table
@@ -34,7 +34,13 @@
             </tr>
             {% for glider in gliders %}
             <tr>
-                <td><input type="checkbox" name="{{glider.glider_norm.lower().replace(' ','-')}}" /></td>
+                <td>
+                    {% if glider.glider_norm.lower().replace(' ','-') in filter.compare %}
+                        <input type="checkbox" name="{{glider.glider_norm.lower().replace(' ','-')}}" checked />
+                    {% else %}
+                        <input type="checkbox" name="{{glider.glider_norm.lower().replace(' ','-')}}" />
+                    {% endif %}
+                </td>
                 <td><a href="/gliders/{{ glider.glider_norm.lower().replace(' ','-') }}">{{ glider.glider_norm }}</a></td>
                 <td>{{ glider.class }}</td>
                 <td>{{ glider.count }}</td>
@@ -50,7 +56,11 @@
     </div>
 
 
-    <div class="w3-container w3-third">
+    <div class="w3-container w3-half">
+        {% if comparison %}
+         <img src="{{comparison}}"/>
+        {% endif %}
+
         <h3>Top unclassified</h3>
         <table class="w3-table w3-bordered">
             <tr>

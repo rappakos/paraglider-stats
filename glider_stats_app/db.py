@@ -178,6 +178,46 @@ async def get_glider(glider:str):
         'img_b64': img_b64
     }
 
+async def get_comparison(compare):
+        import math
+        import pandas as pd
+        import numpy as np   
+        import plotly.express as px
+        import plotly.graph_objects as go
+        from base64 import b64encode
+
+        year, point_goal = 2023, 100.0
+
+        engine = create_engine(f'sqlite:///{DB_NAME}')
+        with engine.connect() as db:
+            param = {'year':year}
+            #print(param)
+            comp_list = "','".join([c.replace('-',' ') for c in compare])
+            df  = pd.read_sql_query(text(f"""
+                        SELECT  g.glider_norm
+                                    , cast(f.flight_points as float) [xc]
+                                    , row_number() over(partition by g.glider_norm order by  cast(f.flight_points as float)  ) [row_num]
+                        FROM flights f 
+                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                        WHERE LOWER(g.glider_norm) in ('{comp_list}') 
+                    """), db, params=param)
+
+        aggr = df.groupby(['glider_norm'])['xc'].agg([
+            ('count', len),
+            ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
+            ('sigma', lambda value: np.std(np.log(value/point_goal)) )
+        ]).to_dict()
+        #print(aggr)
+        df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider_norm] , axis=1)
+
+        fig = px.scatter( df, x='xc', y='y', color='glider_norm')
+        img_bytes = fig.to_image(format="png")
+
+        encoding = b64encode(img_bytes).decode()
+        
+        return "data:image/png;base64," + encoding
+
+
 async def get_pilots():
     year = 2023 # TODO pass as param?
     res = []
