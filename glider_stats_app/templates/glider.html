@@ -13,8 +13,14 @@
 <hr />
 
 {% if img_b64 %}
+<div class="w3-container w3-half">
 <img src="{{img_b64}}"/>
+</div>
 {% endif %}
-
+{% if img2_b64 %}
+<div class="w3-container w3-half">
+    <img src="{{img2_b64}}"/>
+</div>
+{% endif %}
 
 {% endblock %}

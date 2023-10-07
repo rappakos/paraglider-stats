@@ -119,6 +119,7 @@ async def get_glider(glider:str):
     import plotly.express as px
     import plotly.graph_objects as go
     from base64 import b64encode
+    from scipy import special
 
     year,point_goal = 2023, 100
     async with aiosqlite.connect(DB_NAME) as db:
@@ -166,11 +167,20 @@ async def get_glider(glider:str):
 
         fig.update_xaxes(title='xc points',range=[0,500])
         fig.update_yaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
-        img_bytes = fig.to_image(format="png")
 
+        img_bytes = fig.to_image(format="png")
         encoding = b64encode(img_bytes).decode()
         img_b64 = "data:image/png;base64," + encoding
 
+        # plot #2
+        fig2 = px.scatter( x=logp, y=[mu+sigma*math.sqrt(2.0)*special.erfinv(2.0*p/len(points)-1.0) for p in np.arange(len(points))])
+        fig2.add_trace(go.Scatter(x=np.arange(-3,4), y= np.arange(-3,4), mode='lines', showlegend=False ))
+        fig2.update_xaxes(title='log(xc points/100)',range=[-3,3])
+        fig2.update_yaxes(title='mu + sigma * sqrt2 * erf-inv (2 * flight number / number of flights + 1)',range=[-3,3])
+
+        img2_bytes = fig2.to_image(format="png")
+        encoding = b64encode(img2_bytes).decode()
+        img2_b64 = "data:image/png;base64," + encoding
 
     return {
         'glider_norm': glider_norm,
@@ -179,7 +189,8 @@ async def get_glider(glider:str):
         'pilot_count': p_count,
         'mu': mu,
         'sigma': sigma,
-        'img_b64': img_b64
+        'img_b64': img_b64,
+        'img2_b64':img2_b64
     }
 
 async def get_comparison(compare):
