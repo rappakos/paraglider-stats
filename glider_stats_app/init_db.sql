@@ -188,7 +188,29 @@ VALUES
 ('UP Kibo','UP Kibo','B'),
 ('ADVANCE Iota2','ADVANCE Iota 2','B'),
 ('SKYWALK Chili5','SKYWALK Chili 5','B'),
-('SKYWALK Chili4','SKYWALK Chili 4','B');
+('SKYWALK Chili4','SKYWALK Chili 4','B'),
+('NIVIUK Koyot 4','NIVIUK Koyot 4','A'),
+('DAVINCI Funky','DAVINCI Funky','B'),
+('NIVIUK Hook 3','NIVIUK Hook 3','B'),
+('SUPAIR Leaf 2','SUPAIR Leaf 2','B'),
+('DUDEK Optic 2','DUDEK Optic 2','B'),
+('SOL SPORTS Sycross 2','SOL Sycross 2','B'),
+('BGD Magic','BGD Magic','A'),
+('TRIPLE SEVEN Rook 2','777 Rook 2','B'),
+('GIN GLIDERS Avid','GIN Avid','B'),
+('SKY PARAGLIDERS Kudos 2','SKY Kudos 2','B'),
+('MAC PARA Elan','MACPARA Elan','C'),
+('U-TURN Vision','UTURN Vision','B'),
+('BGD Riot','BGD Riot','B'),
+('SWING Arcus RS','SWING Arcus RS','B'),
+('GRADIENT Aspen 4','GRADIENT Aspen 4','C'),
+('GIN GLIDERS Atlas','GIN GLIDERS Atlas','B'),
+('AXIS Comet 4','AXIS Comet 4','B'),
+('SWING Miura RS','SWING Miura RS','B'),
+('GRADIENT Golden 4','GRADIENT Golden 4','B'),
+('GRADIENT Golden 5','GRADIENT Golden 5','B');
+
+
 
 --DELETE FROM gliders;
 

@@ -101,7 +101,8 @@ async def gliders(request):
             'filter': {
                 'glider':glider,
                 'class':g_class,
-                'compare': compare
+                'compare': compare,
+                'unclass': unclass
             }
         }
 
