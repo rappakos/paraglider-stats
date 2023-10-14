@@ -5,7 +5,7 @@
 
 {% block content %}
 <h2>XContest 2023</h2>
-<div class="w3-container">
+<div class="w3-row w3-padding-64">
     <table class="w3-table w3-bordered">
         <tr>
             <th></th>
@@ -27,32 +27,58 @@
         </tr>    
     </table>
 </div>
-<div class="w3-container">
-    <div class="w3-container w3-third">
-    {% if manufacturers %} 
-    <table class="w3-table w3-bordered">
-        <tr>
-            <th>Manufacturer</th>
-            <th># Pilots</th>
-            <th># C Pilots</th>
-            <th># B Pilots</th>
-            <th># A Pilots</th>
-        </tr>
-        {% for entry in manufacturers %}
-            <tr>
-                <td>{{ entry.manufacturer }}</td>
-                <td>{{ entry.pilots }}</td>
-                <td>{{ entry.C }}</td>
-                <td>{{ entry.B }}</td>
-                <td>{{ entry.A }}</td>
-            </tr>
-        {% endfor %}
-    {% endif %}
+<div class="w3-row">
+
+    <div class="w3-half w3-container">
+        <div id="piechart" ></div>
     </div>
 
-    <div class="w3-container w3-third">
-        more stats
+    <div class="w3-half w3-container">
+        {% if manufacturers %} 
+        <table class="w3-table w3-bordered">
+            <tr>
+                <th>Manufacturer</th>
+                <th># Pilots</th>
+                <th># C Pilots</th>
+                <th># B Pilots</th>
+                <th># A Pilots</th>
+            </tr>
+            {% for entry in manufacturers %}
+                <tr>
+                    <td>{{ entry.manufacturer }}</td>
+                    <td>{{ entry.pilots }}</td>
+                    <td>{{ entry.C }}</td>
+                    <td>{{ entry.B }}</td>
+                    <td>{{ entry.A }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
     </div>
 </div>
+
+<script type="text/javascript">
+    // Load google charts
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    // Draw the chart and set the chart values
+    function drawChart() {
+      const data_array = [['Manufacturer','Pilots'],
+                        {% for entry in manufacturers %}
+                            ['{{entry.manufacturer}}', {{entry.pilots}}],
+                        {% endfor %}];
+      //console.log(data_array);
+
+      var data = google.visualization.arrayToDataTable(data_array);
+    
+      // Optional; add a title and set the width and height of the chart
+      var options = {'title':'Number of pilots by manufacturer', 'width':720, 'height':640};
+    
+      // Display the chart inside the <div> element with id="piechart"
+      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+      chart.draw(data, options);
+    }
+</script>
 
 {% endblock %}
