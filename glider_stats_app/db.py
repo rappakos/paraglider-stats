@@ -216,7 +216,8 @@ async def get_glider(glider:str):
 
         #print(points)
         logp = [math.log(p/point_goal) for p in points]
-        mu, sigma = np.mean(logp), np.std(logp)
+        mu, sigma, confidence = np.mean(logp), np.std(logp), 1.96*np.std(logp)/math.sqrt(len(points))
+
         # plot - TODO check if dash module is simpler
         fig = px.scatter( x=np.arange(len(points)), y=points)
         xrange = np.arange(1,500)
@@ -254,6 +255,7 @@ async def get_glider(glider:str):
         'pilot_count': p_count,
         'mu': mu,
         'sigma': sigma,
+        'confidence': confidence,
         'img_b64': img_b64,
         'img2_b64':img2_b64,
         'img3_b64':img3_b64

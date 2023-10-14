@@ -3,15 +3,50 @@
 {% set title =  glider_norm %}
 
 {% block content %}
- 
-<p>{{ glider_norm }} - {{ class }}</p>
-<p>Flights: {{ count }}</p>
-<p>Pilots:  {{ pilot_count }} </p>
-<hr />
-<p>mu: {{ '{0:0.4f}'.format(mu) }}</p>
-<p>sigma:  {{ '{0:0.4f}'.format(sigma) }} </p>
+<div class="w3-container w3-row" style="width:280px" >
+<table class="w3-table w3-bordered">
+    <tr>
+        <th class="w3-right-align">Class:</th>
+        <td class="w3-right-align">{{ class }}</td>
+    </tr>
+    <tr>
+        <th class="w3-right-align"># Flights:</th>
+        <td class="w3-right-align">{{ count }}</td>
+    </tr>
+    <tr>
+        <th class="w3-right-align"># Pilots:</th>
+        <td class="w3-right-align">{{ pilot_count }}</td>
+    </tr>    
+    <tr>
+        <th class="w3-right-align">log-normal &mu;:</th>
+        <td class="w3-right-align">{{ '{0:0.4f}'.format(mu) }}</td>
+    </tr>    
+    <tr>
+        <th class="w3-right-align">log-normal &sigma;:</th>
+        <td class="w3-right-align">{{ '{0:0.4f}'.format(sigma) }}</td>
+    </tr>    
+    <tr>
+        <th class="w3-right-align">fit quality:</th>
+        <td class="w3-right-align">
+            <!-- 1.96 * sqrt( 0.8^2 / 200) approx 0.11 -->
+            {% if confidence <= 0.11 %}
+                good
+            {% elif confidence <= 0.165 %} 
+                ok
+            <!-- 1.96 * sqrt( 0.8^2 / 50) approx 0.22 -->                
+            {% elif confidence <= 0.22 %} 
+                low
+            {% else %} 
+                bad
+            {% endif %}
+        </td>  
+    </tr>   
+</table>
+</div>
+
 <hr />
 
+<div class="w3-row">
 {% if img_b64 %}
 <div class="w3-container w3-third">
     <h3>Raw data</h3>
@@ -25,7 +60,7 @@
 <div class="w3-container w3-third">
     <h3>Transform y</h3>
     <p>X-axis: flights ordered by XC points </p>
-    <p>Y-axis: (natural) logarithm of the XC-points per 100 (XC=100 points is chosen as the normal value) </p>
+    <p>Y-axis: (natural) logarithm of the XC-points per 100<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (XC=100 points is chosen as the normal value) </p>
     <p>Red line: standard normal distribution curve (normalized to number of points) </p>
     <img src="{{img2_b64}}"/>
 </div>
@@ -33,11 +68,11 @@
 {% if img3_b64 %}
 <div class="w3-container w3-third">
     <h3>Transform x&y</h3>
-    <p>X-axis: inverse transform of the log-normal curve x => mu + sigma*sqrt2* erfinv(1 + 2 * flight number/number of points ) </p>
+    <p>X-axis: inverse transform of the log-normal curve<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x &rArr; &mu; + &sigma; * &radic; 2 * erfinv(1 + 2 * flight number/number of points ) </p>
     <p>Y-axis: (natural) logarithm of XC-points per 100  </p>
     <p>Red line: the x=y line </p>    
     <img src="{{img3_b64}}"/>
 </div>
 {% endif %}
-
+</div>
 {% endblock %}

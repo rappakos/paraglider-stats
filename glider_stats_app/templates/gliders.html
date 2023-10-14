@@ -29,19 +29,20 @@
             <tr>
                 <th></th>
                 <th>Glider</th>
-                <th width="20px">Class</th>
+                <th  >Class</th>
                 <th>Count</th>
-                <th colspan="3">Log-Normal params</th>
+                <th colspan="4">Log-Normal params</th>
                 <th colspan="3">P( xc &gt;= X )</th>
             </tr>
             <tr>
                 <th></th>
                 <th><input id="glider" name="glider" type="text" value="{{filter.glider}}" /></th>
-                <th width="20px"><input id="class" name="class" type="text" value="{{filter.class}}" /></th>
+                <th  ><input id="class" name="class" type="text" value="{{filter.class}}" size="2" /></th>
                 <th></th>
                 <th>mu</th>
                 <th>sigma</th>
                 <th>log-theta</th>
+                <th>fit</th>
                 <th>X=50</th>
                 <th>X=100</th>
                 <th>X=200</th>
@@ -66,11 +67,24 @@
                     {% endif %}
                 </td>
                 <td><a href="/gliders/{{ glider.glider_norm.lower().replace(' ','-') }}">{{ glider.glider_norm }}</a></td>
-                <td width="20px" >{{ glider.class }}</td>
-                <td>{{ glider.count }}</td>
+                <td class="w3-center"  >{{ glider.class }}</td>
+                <td class="w3-right-align">{{ glider.count }}</td>
                 <td>{{  '{0:0.4f}'.format(glider.mu) }}</td>
                 <td>{{  '{0:0.4f}'.format(glider.sigma) }}</td>
-                <td>{{  '{0:0.4f}'.format(glider.mu + 0.5*glider.sigma**2) }} &plusmn; {{  '{0:0.4f}'.format(glider.confidence ) }} </td>
+                <td class="w3-right-align">{{  '{0:0.4f}'.format(glider.mu + 0.5*glider.sigma**2) }} &plusmn; {{  '{0:0.4f}'.format(glider.confidence ) }} </td>
+                <td>
+                    <!-- 1.96 * sqrt( 0.8^2 / 200) approx 0.11 -->
+                    {% if glider.confidence <= 0.11 %}
+                        good
+                    {% elif glider.confidence <= 0.165 %} 
+                        ok
+                    <!-- 1.96 * sqrt( 0.8^2 / 50) approx 0.22 -->                
+                    {% elif glider.confidence <= 0.22 %} 
+                        low
+                    {% else %} 
+                        bad
+                    {% endif %}
+                </td>          
                 <td>{{ (glider.p50*100)|round|int }} %</td>
                 <td>{{ (glider.p100*100)|round|int }} %</td>
                 <td>{{ (glider.p200*100)|round|int }} %</td>
