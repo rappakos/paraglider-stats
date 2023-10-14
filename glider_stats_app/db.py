@@ -50,6 +50,53 @@ async def get_main_counts():
 
     return  year, pilots, flights, gliders  
 
+async def get_eval_counts():
+    year, pilots, flights, gliders = 2023,0,0,0
+    async with aiosqlite.connect(DB_NAME) as db:
+        param = {'year':year}
+        async with db.execute("""SELECT count(distinct p.pilot_id) [pilots]
+                                        ,count(distinct f.flight_id) [flights]
+                                        ,count(distinct f.glider) [gliders]
+                                 FROM pilots p
+                                 INNER JOIN flights f ON f.pilot_id=p.pilot_id
+                                 INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                 WHERE p.year = :year 
+                                 GROUP BY [year]""",param) as cursor:
+            async for row in cursor:
+                pilots = row[0]
+                flights = row[1]
+                gliders = row[2]
+
+    return  pilots, flights, gliders  
+
+async def get_pilots_by_manufacturer():
+        import pandas as pd
+
+        year = 2023
+
+        engine = create_engine(f'sqlite:///{DB_NAME}')
+        with engine.connect() as db:
+            param = {'year':year}
+            #print(param)
+            df  = pd.read_sql_query(text(f"""
+                        SELECT  g.glider_norm
+                                    , g.class
+                                    , count( distinct f.pilot_id) [pilots]
+                        FROM flights f 
+                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                        GROUP BY g.glider_norm COLLATE NOCASE, g.class
+                        ORDER BY count( distinct f.pilot_id) DESC
+                    """), db, params=param)
+        
+        df['manufacturer'] = df.apply(lambda row: row.glider_norm.split(' ')[0], axis=1)
+        
+        df = df.groupby(['manufacturer'])['pilots'].agg([('sum', sum)]).sort_values('sum',ascending=False)
+        
+        print(df.head())
+
+        return df
+        
+
 async def get_unclassed_gliders(glider:str):
         year = 2023
         gliders = []

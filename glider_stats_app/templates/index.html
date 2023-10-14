@@ -5,18 +5,48 @@
 
 {% block content %}
 <h2>XContest 2023</h2>
+<div class="w3-container">
+    <table class="w3-table w3-bordered">
+        <tr>
+            <th></th>
+            <th># Pilots</th>
+            <th># Flights</th>
+            <th># Glider names</th>
+        </tr>
+        <tr>
+            <td>total</td>
+            <td>{{ total.pilots }}</td>
+            <td>{{ total.flights }}</td>
+            <td>{{ total.gliders }}</td>
+        </tr>
+        <tr>
+            <td>evaluated</td>
+            <td>{{ evaluated.pilots }}</td>
+            <td>{{ evaluated.flights }}</td>
+            <td>{{ evaluated.gliders }}</td>
+        </tr>    
+    </table>
+</div>
+<div class="w3-container">
+    <div class="w3-container w3-third">
+    {% if manufacturers %} 
+    <table class="w3-table w3-bordered">
+        <tr>
+            <th>Manufacturer</th>
+            <th># Pilots</th>
+        </tr>
+        {% for entry in manufacturers %}
+            <tr>
+                <td>{{ entry.manufacturer }}</td>
+                <td>{{ entry.sum }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </div>
 
-<table class="w3-table w3-bordered">
-    <tr>
-        <th># Pilots</th>
-        <th># Flights</th>
-        <th># Gliders</th>
-    </tr>
-    <tr>
-        <td>{{ pilots }}</td>
-        <td>{{ flights }}</td>
-        <td>{{ gliders }}</td>
-    </tr>
-</table>
+    <div class="w3-container w3-third">
+        more stats
+    </div>
+</div>
 
 {% endblock %}
