@@ -36,7 +36,7 @@ This year has been quite exciting since a bunch of new EN-C 2-liners appeared on
 
 ### Gliders
 
-![Gliders](./screenshots/gliders.PNG)
+![Gliders](./screenshots/gliders.png)
 
 ### Glider details
 
