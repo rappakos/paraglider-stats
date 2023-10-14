@@ -33,9 +33,13 @@ Furthermore, based on the sample estimates of the logarithmic variable `Y = log 
 
 $$ \ln \theta = \ln \rm{E} X = \bar Y + S^2/2 \pm z \sqrt{\frac{S^2}{n} + \frac{S^4}{2(n-1)}  } $$
 
-with $$ z = 1.96 $$.
+with `z = 1.96`.
 
-As we will see, for many wings `S^2 approx 0.8^2`. For small sample sizes `n` approx 50 (meaning only around 10 different pilots), the inaccuracy of the log of the mean is therefore approximately 0.22. To be able to reasonably distinguish the performance of 2 different gliders, these confidence intervals should have a small overlap. For an order of difference of $$ \Delta \ln \theta \approx 0.1 $$ we need at least `n` approx 200 flights.
+As we will see, for many wings `S^2 approx 0.8^2`. For small sample sizes `n` approx. 50 (meaning only around 10 different pilots), the inaccuracy of the log of the mean is therefore approximately 0.22. To be able to reasonably distinguish the performance of 2 different gliders, these confidence intervals should have a small overlap. For an order of difference of 
+
+$$ \Delta \ln \theta \approx 0.1 $$ 
+
+we need at least `n` approx 200 flights.
 
 
 ## Results
