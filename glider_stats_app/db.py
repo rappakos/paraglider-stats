@@ -90,11 +90,13 @@ async def get_pilots_by_manufacturer():
         
         df['manufacturer'] = df.apply(lambda row: row.glider_norm.split(' ')[0], axis=1)
         
-        df = df.groupby(['manufacturer'])['pilots'].agg([('sum', sum)]).sort_values('sum',ascending=False)
-        
+        df = df.groupby(['manufacturer','class'])['pilots'].agg([('pilots', sum)]).reset_index()
+        #print(df.head())
+        df = pd.pivot_table(df,index='manufacturer', columns='class', values='pilots', fill_value=0)
+        df['pilots'] = df.apply(lambda row: row.A + row.B + row.C, axis=1)
         print(df.head())
 
-        return df
+        return df.sort_values(by='pilots',ascending=False)
         
 
 async def get_unclassed_gliders(glider:str):

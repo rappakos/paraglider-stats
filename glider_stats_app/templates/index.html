@@ -34,11 +34,17 @@
         <tr>
             <th>Manufacturer</th>
             <th># Pilots</th>
+            <th># C Pilots</th>
+            <th># B Pilots</th>
+            <th># A Pilots</th>
         </tr>
         {% for entry in manufacturers %}
             <tr>
                 <td>{{ entry.manufacturer }}</td>
-                <td>{{ entry.sum }}</td>
+                <td>{{ entry.pilots }}</td>
+                <td>{{ entry.C }}</td>
+                <td>{{ entry.B }}</td>
+                <td>{{ entry.A }}</td>
             </tr>
         {% endfor %}
     {% endif %}
