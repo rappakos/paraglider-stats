@@ -150,15 +150,22 @@ async def get_gliders(glider:str, g_class:str):
         
         df = df.groupby(['glider_norm','class'])['xc'].agg([
             ('count', len),
+            ('count2', len),
             ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
             ('sigma', lambda value: np.std(np.log(value/point_goal)) )
         ])
 
-        df['p50'] = df.apply(lambda row: lognormal_1(row.mu-math.log(0.5),row.sigma), axis=1)
-        df['p100'] = df.apply(lambda row: lognormal_1(row.mu,row.sigma), axis=1)
-        df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
-        #print(df.columns)
-        df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
+        if not df.empty:
+            df['confidence'] =  df.apply(lambda row: 1.96*math.sqrt(row.sigma**2/float(row.count2) + 0.5*row.sigma**4/(row.count2-1.0)) ,axis=1)
+            df['p50'] = df.apply(lambda row: lognormal_1(row.mu-math.log(0.5),row.sigma), axis=1)
+            df['p100'] = df.apply(lambda row: lognormal_1(row.mu,row.sigma), axis=1)
+            df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
+            
+            #print(df.columns)
+            df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
+        else:
+            print('empty')
+
         #print(df.head(10))
 
         return df
