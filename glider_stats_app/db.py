@@ -99,7 +99,7 @@ async def get_pilots_by_manufacturer():
         return df.sort_values(by='pilots',ascending=False)
         
 
-async def get_unclassed_gliders(glider:str):
+async def get_unclassed_gliders(glider:str,top:int=20):
         year = 2023
         gliders = []
         #print(glider)
@@ -113,7 +113,7 @@ async def get_unclassed_gliders(glider:str):
                     GROUP BY f.glider  
                     --HAVING count(*) >= 10
                     ORDER BY count(*) DESC
-                    LIMIT 20 """,param) as cursor:
+                    LIMIT {top} """,param) as cursor:
                 async for row in cursor:
                     gliders.append({
                         'glider': row[0],

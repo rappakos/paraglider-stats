@@ -88,18 +88,35 @@ async def gliders(request):
                                request.rel_url.query.get('unclass',''), \
                                [g for g in request.rel_url.query.keys() if g not in ['glider','class','export','unclass']]
     #print(compare)
-    unclass_gliders = await db.get_unclassed_gliders(unclass)
-    df = await db.get_gliders(glider=glider, g_class=g_class)
+
+
+
     
     comparison = await db.get_comparison(compare) if compare else None
 
     if 'export' in request.rel_url.query.keys():
+        # other data
+        df = await db.get_gliders(glider='', g_class='')
+        df.drop(columns=['count2'], inplace=True)
+        df = df.rename(columns={"glider_norm": "glider name", "count": "flight count"})
+        year, pilots, flights, gliders = await db.get_main_counts()
+        e_pilots, e_flights, e_gliders = await db.get_eval_counts() 
+        df_totals = pd.DataFrame([
+            ['total',pilots, flights, gliders],
+            ['evaluated',e_pilots, e_flights, e_gliders]
+        ], columns=['counts','pilots','flights','glider name'])
+        df_manu = await db.get_pilots_by_manufacturer()
+        df_unclass = pd.DataFrame(await db.get_unclassed_gliders(glider='', top=1000))
+
         headers = {
-            "Content-disposition": f'attachment; filename=gliders.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
+            "Content-disposition": f'attachment; filename=xcontest.2023.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
         }
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='xcontest 2023',index=True)
+            df_totals.to_excel(writer, sheet_name='overview',index=False)
+            df_manu.to_excel(writer, sheet_name='manufacturers',index=True)
+            df.to_excel(writer, sheet_name='gliders',index=True)
+            df_unclass.to_excel(writer, sheet_name='unevaluated',index=False)
        
         return web.Response(
                 body=file_sender(xlsx_data=output.getvalue()),
@@ -107,7 +124,8 @@ async def gliders(request):
             )
 
     else:
-
+        unclass_gliders = await db.get_unclassed_gliders(unclass)
+        df = await db.get_gliders(glider=glider, g_class=g_class)
         gliders = df.reset_index().to_dict('records')
 
         return {
