@@ -29,3 +29,15 @@ This means that once the parameters `mu` and `sigma` are estimated, we can compu
 ## Results
 
 This year has been quite exciting since a bunch of new EN-C 2-liners appeared on the market.
+
+### Overview
+
+![Home page](./screenshots/home.PNG)
+
+### Gliders
+
+![Gliders](./screenshots/gliders.PNG)
+
+### Glider details
+
+![Glider details](./screenshots/glider.PNG)
