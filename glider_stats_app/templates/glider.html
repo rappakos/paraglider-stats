@@ -15,18 +15,18 @@
 {% if img_b64 %}
 <div class="w3-container w3-third">
     <h3>Raw data</h3>
-    <p>X-axis: flights numbered over ordering by the XC points </p>
+    <p>X-axis: flights ordered by XC points </p>
     <p>Y-axis: simply the XC point value </p>
-    <p>Red line: a log-normal probability curve corresponding to the mu and sigma values obtained from the data (normalized to number of points) </p>
+    <p>Red line: fitted log-normal distribution curve (normalized to number of points) </p>
     <img src="{{img_b64}}"/>
 </div>
 {% endif %}
 {% if img2_b64 %}
 <div class="w3-container w3-third">
     <h3>Transform y</h3>
-    <p>X-axis: flights numbered over ordering by the XC points </p>
-    <p>Y-axis: (natural) log of XC-points per 100 (XC=100 points is chosen as the normal value) </p>
-    <p>Red line: standard normal probability curve (normalized to number of points) </p>
+    <p>X-axis: flights ordered by XC points </p>
+    <p>Y-axis: (natural) logarithm of the XC-points per 100 (XC=100 points is chosen as the normal value) </p>
+    <p>Red line: standard normal distribution curve (normalized to number of points) </p>
     <img src="{{img2_b64}}"/>
 </div>
 {% endif %}
@@ -34,7 +34,7 @@
 <div class="w3-container w3-third">
     <h3>Transform x&y</h3>
     <p>X-axis: inverse transform of the log-normal curve x => mu + sigma*sqrt2* erfinv(1 + 2 * flight number/number of points ) </p>
-    <p>Y-axis: (natural) log of XC-points per 100  </p>
+    <p>Y-axis: (natural) logarithm of XC-points per 100  </p>
     <p>Red line: the x=y line </p>    
     <img src="{{img3_b64}}"/>
 </div>

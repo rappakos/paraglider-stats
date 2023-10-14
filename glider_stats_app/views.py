@@ -19,7 +19,7 @@ async def index(request):
     df =  await db.get_pilots_by_manufacturer()
     stats_by_manufacturer = df.reset_index().to_dict('records')
 
-    print(stats_by_manufacturer)
+    #print(stats_by_manufacturer)
 
     return {
             'year':year,
