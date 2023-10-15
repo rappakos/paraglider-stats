@@ -203,8 +203,13 @@ async def get_glider(glider:str):
                 g_class = row[1]
                 g_count = row[2]
                 p_count= row[3]
+
+        flights = []       
         if glider_norm:
             async with db.execute("""SELECT cast(f.flight_points as float) [xc]
+                        , f.pilot_id
+                        , f.launch
+                        , f.flight_type
                     FROM pilots p
                     INNER JOIN flights f ON f.pilot_id=p.pilot_id
                     INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE       
@@ -212,7 +217,14 @@ async def get_glider(glider:str):
                         and g.glider_norm = :glider_safe COLLATE NOCASE 
                     ORDER BY cast(f.flight_points as float) ASC """,param) as cursor:
              async for row in cursor:
-                 points.append(row[0])
+                points.append(row[0])
+                flights.insert(0, {
+                    "xc_points" : row[0],
+                    "pilot_id": row[1],
+                    "launch": row[2],
+                    "flight_type": row[3]
+                })
+
 
         #print(points)
         logp = [math.log(p/point_goal) for p in points]
@@ -256,6 +268,7 @@ async def get_glider(glider:str):
         'mu': mu,
         'sigma': sigma,
         'confidence': confidence,
+        'flights': flights,
         'img_b64': img_b64,
         'img2_b64':img2_b64,
         'img3_b64':img3_b64

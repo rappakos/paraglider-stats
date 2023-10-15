@@ -163,7 +163,7 @@ VALUES
 ('MACPARA Illusion','MACPARA Illusion','B'),
 ('GIN GLIDERS Sprint 3','GIN Sprint 3','B'),
 ('NOVA MENTOR 7','NOVA MENTOR 7','B'),
-('NOVA MENTOR7 Light','NOVA MENTOR 7 Light','B'),
+('NOVA MENTOR7 Light','NOVA MENTOR 7 light','B'),
 ('NOVA Mentor 4 light','NOVA Mentor 4 light','B'),
 ('AIR DESIGN Volt 4','AIRDESIGN Volt 4','C'),
 ('AIRDESIGN Volt4','AIRDESIGN Volt 4','C'),

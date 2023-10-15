@@ -3,8 +3,9 @@
 {% set title =  glider_norm %}
 
 {% block content %}
-<div class="w3-container w3-row" style="width:280px" >
-<table class="w3-table w3-bordered">
+<div class="w3-container w3-row" >
+    <div class="w3-container w3-quarter" >
+        <table class="w3-table w3-bordered">
     <tr>
         <th class="w3-right-align">Class:</th>
         <td class="w3-right-align">{{ class }}</td>
@@ -41,7 +42,28 @@
             {% endif %}
         </td>  
     </tr>   
-</table>
+        </table>
+    </div>
+    <div class="w3-container w3-rest" style="height:360px;overflow-y:scroll;overflow-x: hidden;">
+        {% if flights %}
+        <table class="w3-table w3-bordered w3-tiny">
+                <tr style="position: sticky;top:-10px">
+                    <th>Points</th>
+                    <th>Type</th>
+                    <th>Pilot ID</th>
+                    <th>Launch</th>
+                </tr>
+                {% for flight in flights %} 
+                    <tr>
+                        <td>{{flight.xc_points}}</td>
+                        <td>{{flight.flight_type}}</td>
+                        <td>{{flight.pilot_id}}</td>
+                        <td>{{flight.launch}}</td>
+                    </tr>
+                {% endfor %}
+        </table>
+        {% endif %}
+    </div>
 </div>
 
 <hr />
