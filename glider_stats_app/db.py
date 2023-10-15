@@ -229,6 +229,18 @@ async def get_glider(glider:str):
         #print(points)
         logp = [math.log(p/point_goal) for p in points]
         mu, sigma, confidence = np.mean(logp), np.std(logp), 1.96*np.std(logp)/math.sqrt(len(points))
+        # lognormal - method of moments
+        Ex, Vx = np.mean(points)/point_goal, np.var(points)/point_goal**2        
+        mu2, sigma2 = math.log(Ex/math.sqrt(1.0 + Vx/Ex**2)), math.sqrt(math.log(1.0 + Vx/Ex**2))
+        # Gamma dist - method of moments
+        gamma_k, gamma_theta = Ex**2/Vx, Vx/Ex
+
+        print(f"""
+            naive mu = {mu}, sigma = {sigma}
+            m-o-m mu = {mu2}, sigma = {sigma2}
+            m-o-m k = {gamma_k}, theta = {gamma_theta}
+            """)
+
 
         # plot - TODO check if dash module is simpler
         fig = px.scatter( x=np.arange(len(points)), y=points)
@@ -236,7 +248,9 @@ async def get_glider(glider:str):
         fig.add_trace(go.Scatter(x= [len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
                                 y=xrange, \
                                 mode='lines', showlegend=False ))
-      
+        fig.add_trace(go.Scatter(x= [len(points)*special.gammainc(gamma_k,x/point_goal/gamma_theta )  for x in xrange], \
+                                y=xrange, \
+                                mode='lines', showlegend=False ))      
 
         fig.update_xaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
         fig.update_yaxes(title='xc points',range=[0,500])
@@ -248,6 +262,10 @@ async def get_glider(glider:str):
         fig2.add_trace(go.Scatter(x=[len(points)*0.5*(1.0+math.erf((math.log(x/point_goal) - mu)/sigma/math.sqrt(2.0) )) for x in xrange], \
                                 y=[math.log(x/point_goal)  for x in xrange], \
                                 mode='lines', showlegend=False ))
+        fig2.add_trace(go.Scatter(x= [len(points)*special.gammainc(gamma_k,x/point_goal/gamma_theta )  for x in xrange], \
+                                y=[math.log(x/point_goal)  for x in xrange], \
+                                mode='lines', showlegend=False ))                     
+
         fig2.update_xaxes(title='flight number',  range=[0, math.floor((len(points) / 100)+1)*100 ])
         fig2.update_yaxes(title='log(xc points/100)',range=[-3,3])
         img2_b64 = map_fig_to_b64(fig2)
