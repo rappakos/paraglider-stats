@@ -21,7 +21,7 @@ async def setup_db(app):
 
 
 async def get_main_counts():
-    year, pilots, flights, gliders = 2023,0,0,0
+    year, pilots, flights, gliders = 2024,0,0,0
     async with aiosqlite.connect(DB_NAME) as db:
         param = {'year':year}
         async with db.execute("""SELECT [year], count(pilot_id) [pilots]
@@ -51,7 +51,7 @@ async def get_main_counts():
     return  year, pilots, flights, gliders  
 
 async def get_eval_counts():
-    year, pilots, flights, gliders = 2023,0,0,0
+    year, pilots, flights, gliders = 2024,0,0,0
     async with aiosqlite.connect(DB_NAME) as db:
         param = {'year':year}
         async with db.execute("""SELECT count(distinct p.pilot_id) [pilots]
@@ -72,7 +72,7 @@ async def get_eval_counts():
 async def get_pilots_by_manufacturer():
         import pandas as pd
 
-        year = 2023
+        year = 2024
 
         engine = create_engine(f'sqlite:///{DB_NAME}')
         with engine.connect() as db:
@@ -100,7 +100,7 @@ async def get_pilots_by_manufacturer():
         
 
 async def get_unclassed_gliders(glider:str,top:int=20):
-        year = 2023
+        year = 2024
         gliders = []
         #print(glider)
         async with aiosqlite.connect(DB_NAME) as db:
@@ -131,7 +131,7 @@ async def get_gliders(glider:str, g_class:str):
         import pandas as pd
         import numpy as np
 
-        year, point_goal, min_count = 2023, 100.0, 50
+        year, point_goal, min_count = 2024, 100.0, 50
 
         engine = create_engine(f'sqlite:///{DB_NAME}')
         with engine.connect() as db:
@@ -185,7 +185,7 @@ async def get_glider(glider:str):
     import plotly.graph_objects as go
     from scipy import special
 
-    year,point_goal = 2023, 100
+    year,point_goal = 2024, 100
     async with aiosqlite.connect(DB_NAME) as db:
         param = {'year':year,'glider_safe':glider.replace("-"," ")}
         glider_norm, g_class, g_count, p_count, points = None, None, 0,0,[]
@@ -300,7 +300,7 @@ async def get_comparison(compare):
         import plotly.graph_objects as go
         from scipy import special
 
-        year, point_goal = 2023, 100.0
+        year, point_goal = 2024, 100.0
 
         engine = create_engine(f'sqlite:///{DB_NAME}')
         with engine.connect() as db:
@@ -340,7 +340,7 @@ async def get_comparison(compare):
 
 
 async def get_pilots():
-    year = 2023 # TODO pass as param?
+    year = 2024 # TODO pass as param?
     res = []
     async with aiosqlite.connect(DB_NAME) as db:
         param = {'year': year,"page_size": 20}
@@ -358,7 +358,7 @@ async def get_pilots():
     return res
 
 async def get_max_rank():
-    year = 2023 # TODO pass as param?
+    year = 2024 # TODO pass as param?
     async with aiosqlite.connect(DB_NAME) as db:
         param = {'year': year}
         async with db.execute("""SELECT MAX(xc_rank) 
@@ -366,6 +366,8 @@ async def get_max_rank():
                                  WHERE year = :year """,param) as cursor:
             async for row in cursor:
                 return row[0] or 0
+        
+    return 0
 
 async def delete_pilots():
      async with aiosqlite.connect(DB_NAME) as db:
@@ -373,7 +375,7 @@ async def delete_pilots():
         await db.commit()
 
 async def save_pilots(pilots):
-    year = 2023 # TODO pass as param?
+    year = 2024 # TODO pass as param?
     async with aiosqlite.connect(DB_NAME) as db:
         for pilot in pilots:
             params = {

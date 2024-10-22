@@ -11,7 +11,8 @@ WEBDRIVER_WAIT = 30
 
 XCONTEST_CTG = {
     2022: 5036,
-    2023: 0 # ?
+    2023: 0, # ?
+    2024: 0
 }
 
 CONFIG = DefaultConfig()
@@ -19,7 +20,7 @@ CONFIG = DefaultConfig()
 
 
 async def load_pilots(driver, current_rank:int):
-    year = 2023 # ?
+    year = 2024 # ?
     #key, param = os.environ["XCONTEST_KEY"], os.environ["XCONTEST_PARAM"]
 
     res = []

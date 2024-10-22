@@ -303,6 +303,41 @@ VALUES
 ('FLOW Freedom 2','FLOW Freedom 2','B'),
 ('FLOW Fusion Light','FLOW Fusion Light','C');
 
+INSERT INTO temp_gliders(glider,glider_norm,class)
+VALUES
+('SKY PARAGLIDERS Merlin','DRIFT Merlin','C'),
+('NOVA CODEX','NOVA CODEX','C'),
+('NIVIUK Ikuma 3','NIVIUK Ikuma 3','B'),
+('AIRDESIGN Volt 5','AIRDESIGN Volt 5','C'),
+('MAC PARA Verve','MAC PARA Verve','C'),
+('PHI Scala 2 light','PHI Scala 2 light','C'),
+('NIVIUK Ikuma 3 P','NIVIUK Ikuma 3 P','B'),
+('NIVIUK Ikuma 3P','NIVIUK Ikuma 3 P','B'),
+('GIN GLIDERS Camino 2','GIN Camino 2','C'),
+('PHI Scala 2','PHI Scala 2','C'),
+('ZOOM PARAGLIDERS X2C','ZOOM X2C','C'),
+('ZOOM X2C','ZOOM X2C','C'),
+('artik r','NIVIUK Artik R','C'),
+('ADVANCE Theta ULS','ADVANCE Theta ULS','B'),
+('OZONE Buzz Z7','OZONE Buzz Z7','B'),
+('NOVA Ion 7','NOVA Ion 7','B'),
+('NOVA Ion 7 Light','NOVA Ion 7 Light','B'),
+('SWING Stellar RS','SWING Stellar RS','B'),
+('SUPAIR Step X','SUPAIR Step X','B'),
+('AIRDESIGN Rise 5','AIRDESIGN Rise 5','B'),
+('OZONE Geo 7','OZONE Geo 7','B'),
+('SKYWALK Tequila 6','SKYWALK Tequila 6','B'),
+('SKYWALK Arak 2','SKYWALK Arak 2','B'),
+('AXIS Pluto 4','AXIS Pluto 4','A'),
+('SKY PARAGLIDERS Exos 2','SKY Exos 2','C'),
+('FLOW PARAGLIDERS Mystic','FLOW Mystic','C' ),
+('NIVIUK Koyot 5','NIVIUK Koyot 5','B'),
+('U-TURN Eternity','U-TURN Eternity','A'),
+('PHI Tenor 2 light','PHI Tenor 2 light','B'),
+('DAVINCI Funky 2','DAVINCI Funky 2','B'),
+('AIRDESIGN Vivo 2','AIRDESIGN Vivo 2','B'),
+('SUPAIR Leaf','SUPAIR Leaf','B');
+
 
 --DELETE FROM gliders;
 

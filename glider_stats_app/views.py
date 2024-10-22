@@ -50,6 +50,7 @@ async def load_pilots(request):
     if request.method == 'POST':
         # get next batch
         max_rank = await db.get_max_rank()
+        #print(max_rank)
         # parse xcontest
         driver=request.app.driver
         pilots = await xcontest_loader.load_pilots(driver, max_rank)
@@ -109,7 +110,7 @@ async def gliders(request):
         df_unclass = pd.DataFrame(await db.get_unclassed_gliders(glider='', top=1000))
 
         headers = {
-            "Content-disposition": f'attachment; filename=xcontest.2023.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
+            "Content-disposition": f'attachment; filename=xcontest.2024.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
         }
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
