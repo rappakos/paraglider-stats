@@ -30,7 +30,8 @@
                 <th>Glider name</th>
                 <th>Class</th>
                 <th>Count</th>
-                <th colspan="4">Log-Normal params</th>
+                <!-- <th colspan="3">Log-Normal params</th> -->
+                <th>Fit Quality</th>
                 <th colspan="3">P( xc &gt;= X )</th>
             </tr>
             <tr>
@@ -38,10 +39,10 @@
                 <th><input id="glider" name="glider" type="text" value="{{filter.glider}}" /></th>
                 <th><input id="class" name="class" type="text" value="{{filter.class}}" size="2" /></th>
                 <th></th>
-                <th>mu</th>
+                <!-- <th>mu</th>
                 <th>sigma</th>
-                <th>log-theta</th>
-                <th>fit</th>
+                <th>log-theta</th> -->
+                <th></th>
                 <th>X=50</th>
                 <th>X=100</th>
                 <th>X=200</th>
@@ -68,23 +69,23 @@
                 <td><a href="/gliders/{{ glider.glider_norm.lower().replace(' ','-') }}">{{ glider.glider_norm }}</a></td>
                 <td class="w3-center"  >{{ glider.class }}</td>
                 <td class="w3-right-align">{{ glider.count }}</td>
-                <td>{{  '{0:0.4f}'.format(glider.mu) }}</td>
-                <td>{{  '{0:0.4f}'.format(glider.sigma) }}</td>
+                <!-- <td>{{  '{0:0.4f}'.format(glider.mu) }}</td> -->
+                <!-- <td>{{  '{0:0.4f}'.format(glider.sigma) }}</td> -->
                 <!-- <td class="w3-right-align">{{  '{0:0.4f}'.format(glider.mu + 0.5*glider.sigma**2) }} &plusmn; {{  '{0:0.4f}'.format(glider.confidence ) }} </td> -->
-                <td class="w3-center" style="margin:0px">
+                <!-- <td class="w3-center" style="margin:0px">
                     {% set barwidth = 120 %}
                     {% set barheight = 20 %}
                     {% set tmin = -2.0 %}
                     {% set tmax = 0.4 %}
                     <svg width="{{barwidth}}" height="{{barheight}}"  style="stroke:grey;stroke-width:0.5;fill:none;" >
-                        <rect x="0" y="0" width="{{barwidth}}" height="{{barheight-2}}"></rect>
+                        <rect x="0" y="0" width="{{barwidth}}" height="{{barheight-2}}"></rect>-->
                         <!--
                             x = a * logtheta + b
                             --------------------
                             logtheta_min = tmin => x_min =  0 = tmin a + b => !b =-tmin a = -tmin/(tmax-tmin) * barwidth
                             logtheta_max = tmax => x_max = barwidth =  tmax a + b = (tmax-tmin) a => !a = barwidth/(tmax-tmin)
                         -->
-                        <rect x="{{(glider.mu + 0.5*glider.sigma**2 - glider.confidence)*(barwidth/(tmax-tmin)) + (-tmin*barwidth/(tmax-tmin)) }}" 
+                  <!--      <rect x="{{(glider.mu + 0.5*glider.sigma**2 - glider.confidence)*(barwidth/(tmax-tmin)) + (-tmin*barwidth/(tmax-tmin)) }}" 
                             y="0" 
                             width="{{2*glider.confidence*(barwidth/(tmax-tmin))}}" 
                             height="{{barheight-2}}"
@@ -92,7 +93,7 @@
                             <title>{{  '{0:0.4f}'.format(glider.mu + 0.5*glider.sigma**2) }} &plusmn; {{  '{0:0.4f}'.format(glider.confidence ) }}</title>
                         </rect>
                     </svg>
-                </td>
+                </td> -->
                 <td>
                     <!-- 1.96 * sqrt( 0.8^2 / 200) approx 0.11 -->
                     {% if glider.confidence <= 0.11 %}
@@ -105,7 +106,7 @@
                     {% else %} 
                         bad
                     {% endif %}
-                </td>          
+                </td>
                 <td>{{ (glider.p50*100)|round|int }} %</td>
                 <td>{{ (glider.p100*100)|round|int }} %</td>
                 <td>{{ (glider.p200*100)|round|int }} %</td>
