@@ -12,7 +12,11 @@ def redirect(router, route_name):
 
 @aiohttp_jinja2.template('index.html')
 async def index(request):
-    year= 2025
+    
+    year = request.rel_url.query['y'] if 'y' in request.rel_url.query else None
+    if not year:
+        year = os.environ.get('YEAR')
+    
     year, pilots, flights, gliders = await db.get_main_counts(year)
 
     e_pilots, e_flights, e_gliders = await db.get_eval_counts(year)
