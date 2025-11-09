@@ -46,10 +46,10 @@
             {% for entry in manufacturers %}
                 <tr>
                     <td>{{ entry.manufacturer }}</td>
-                    <td>{{ entry.pilots }}</td>
-                    <td>{{ entry.C }}</td>
-                    <td>{{ entry.B }}</td>
-                    <td>{{ entry.A }}</td>
+                    <td>{{ entry.pilots |round|int }}</td>
+                    <td>{{ entry.C |round|int }}</td>
+                    <td>{{ entry.B |round|int }}</td>
+                    <td>{{ entry.A |round|int }}</td>
                 </tr>
             {% endfor %}
         </table>
