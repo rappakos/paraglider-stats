@@ -110,7 +110,7 @@ async def gliders(request):
         df_unclass = pd.DataFrame(await db.get_unclassed_gliders(glider='', top=1000))
 
         headers = {
-            "Content-disposition": f'attachment; filename=xcontest.2024.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
+            "Content-disposition": f'attachment; filename=xcontest.2025.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
         }
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:

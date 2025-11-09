@@ -102,14 +102,14 @@ VALUES
 ('UP Summit XC4','UP Summit XC4','B'),
 ('NOVA Ion 5','NOVA Ion 5','B'),
 ('NIVIUK Artik 4','NIVIUK Artik 4','C'),
-('BGD Lynx 2','BGD Lynx 2','C'),
+('BGD Lynx 2','BGD Lynx 2','C'), -- 2liner
 ('NOVA Phantom','NOVA Phantom','B'),
 ('PHI Tenor Light','PHI Tenor Light','B'),
 ('SKYWALK Cumeo 2','SKYWALK Cumeo 2','B'),
 ('ADVANCE Epsilon DLS','ADVANCE Epsilon DLS','B'),
 ('BGD Base','BGD Base','B'),
 ('SWING Nyos 2 RS','SWING Nyos 2 RS','B'),
-('BGD Lynx','BGD Lynx','C'),
+('BGD Lynx','BGD Lynx','C'), 
 ('GIN Explorer 2','GIN Explorer 2','B'),
 ('PHI Tenor','PHI Tenor','B'),
 ('SUPAIR Step','SUPAIR Step','B'),
@@ -277,7 +277,7 @@ VALUES
 ('NIVIUK Hook5','NIVIUK Hook 5','B'),
 ('NIVIUK Ikuma2','NIVIUK Ikuma 2','B'),
 ('Niviuk Ikuma 2P','Niviuk Ikuma 2 P','B'),
-('NIVIUK Artic R','NIVIUK Artik R','C'),
+('NIVIUK Artic R','NIVIUK Artik R','C'),  -- 2liner
 ('GIN GLIDERS Evora','GIN Evora','B'),
 ('GIN Evora','GIN Evora','B'),
 ('GIN Explorer2','GIN Explorer 2','B'),
@@ -306,16 +306,16 @@ VALUES
 INSERT INTO temp_gliders(glider,glider_norm,class)
 VALUES
 ('SKY PARAGLIDERS Merlin','DRIFT Merlin','C'),
-('NOVA CODEX','NOVA CODEX','C'),
+('NOVA CODEX','NOVA CODEX','C'), -- 2liner
 ('NIVIUK Ikuma 3','NIVIUK Ikuma 3','B'),
-('AIRDESIGN Volt 5','AIRDESIGN Volt 5','C'),
-('MAC PARA Verve','MAC PARA Verve','C'),
-('PHI Scala 2 light','PHI Scala 2 light','C'),
+('AIRDESIGN Volt 5','AIRDESIGN Volt 5','C'), -- 2liner
+('MAC PARA Verve','MAC PARA Verve','C'),  -- 2liner
+('PHI Scala 2 light','PHI Scala 2 light','C'),  -- 2liner
 ('NIVIUK Ikuma 3 P','NIVIUK Ikuma 3 P','B'),
 ('NIVIUK Ikuma 3P','NIVIUK Ikuma 3 P','B'),
 ('GIN GLIDERS Camino 2','GIN Camino 2','C'),
-('PHI Scala 2','PHI Scala 2','C'),
-('ZOOM PARAGLIDERS X2C','ZOOM X2C','C'),
+('PHI Scala 2','PHI Scala 2','C'),  -- 2liner
+('ZOOM PARAGLIDERS X2C','ZOOM X2C','C'),  -- 2liner
 ('ZOOM X2C','ZOOM X2C','C'),
 ('artik r','NIVIUK Artik R','C'),
 ('ADVANCE Theta ULS','ADVANCE Theta ULS','B'),
@@ -330,13 +330,44 @@ VALUES
 ('SKYWALK Arak 2','SKYWALK Arak 2','B'),
 ('AXIS Pluto 4','AXIS Pluto 4','A'),
 ('SKY PARAGLIDERS Exos 2','SKY Exos 2','C'),
-('FLOW PARAGLIDERS Mystic','FLOW Mystic','C' ),
+('FLOW PARAGLIDERS Mystic','FLOW Mystic','C' ), -- 2liner
 ('NIVIUK Koyot 5','NIVIUK Koyot 5','B'),
 ('U-TURN Eternity','U-TURN Eternity','A'),
 ('PHI Tenor 2 light','PHI Tenor 2 light','B'),
 ('DAVINCI Funky 2','DAVINCI Funky 2','B'),
 ('AIRDESIGN Vivo 2','AIRDESIGN Vivo 2','B'),
 ('SUPAIR Leaf','SUPAIR Leaf','B');
+
+INSERT INTO temp_gliders(glider,glider_norm,class)
+VALUES
+('OZONE Lyght','OZONE Lyght','C'), -- 2liner
+('ADVANCE Sigma DLS','ADVANCE Sigma DLS','C'),
+('Sigma DLS','ADVANCE Sigma DLS','C'),
+('NIVIUK Artik 7 P','NIVIUK Artik 7 P','C'),
+('NIVIUK Artik 7P','NIVIUK Artik 7 P','C'),
+('SKYWALK Sage','SKYWALK Sage','C'), -- 2liner
+('NIVIUK Artik R 2','NIVIUK Artik R 2','C'), -- 2liner
+('NOVA VORTEX','NOVA VORTEX','C'), -- 2liner
+('OZONE Delta 5','OZONE Delta 5','C'), -- 2liner
+('GIN GLIDERS GTO 3','GIN GLIDERS GTO 3','C'),-- 2liner
+('PHI Beat 2 Light','PHI Beat 2 Light','B'),
+('Unbekannt Zoom x2c','	ZOOM X2C','C'), -- 2liner
+('NIVIUK Hiko P','NIVIUK Hiko P','B'),
+('BGD Base 3','BGD Base 3','B'),
+('ADVANCE Theta','ADVANCE Theta','B'),
+('GIN GTO3','GIN GLIDERS GTO 3','C'), -- 2liner
+('MAC PARA Eden 8','MAC PARA Eden 8','B'),
+('PHI Beat 2','PHI Beat 2','B'),
+('AIRDESIGN LiVi','AIRDESIGN LiVi','B'),
+('TRIPLE SEVEN Rook 4','TRIPLE SEVEN Rook 4','B'),
+('NIVIUK Hiko','NIVIUK Hiko','B'),
+('AIRDESIGN Soar 2','AIRDESIGN Soar 2','B'),
+('DAVINCI Mambo','DAVINCI Mambo','C'), -- 2liner
+('SKY PARAGLIDERS Apollo 3','SKY Apollo 3','B'),
+('OZONE Alta','OZONE Alta','A'),
+('NIVIUK Kode P','NIVIUK Kode P','A'),
+('BGD Lynx2','BGD Lynx 2','C') -- 2liner
+;
 
 
 --DELETE FROM gliders;
