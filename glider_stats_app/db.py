@@ -4,6 +4,8 @@ from sqlalchemy import create_engine,text
 
 DB_NAME = './glider_stats.db'
 INIT_SCRIPT = './glider_stats_app/init_db.sql'
+DB_NAME_F = './glider_stats_{year}.db'
+
 
 async def setup_db(app):
     app['DB_NAME'] = DB_NAME
@@ -20,9 +22,9 @@ async def setup_db(app):
             await db.commit()
 
 
-async def get_main_counts():
-    year, pilots, flights, gliders = 2025,0,0,0
-    async with aiosqlite.connect(DB_NAME) as db:
+async def get_main_counts(year:int):
+    pilots, flights, gliders = 0,0,0
+    async with aiosqlite.connect(DB_NAME_F.format(year=year)) as db:
         param = {'year':year}
         async with db.execute("""SELECT [year], count(pilot_id) [pilots]
                                  FROM pilots 
@@ -50,9 +52,9 @@ async def get_main_counts():
 
     return  year, pilots, flights, gliders  
 
-async def get_eval_counts():
-    year, pilots, flights, gliders = 2025,0,0,0
-    async with aiosqlite.connect(DB_NAME) as db:
+async def get_eval_counts(year:int):
+    pilots, flights, gliders = 0,0,0
+    async with aiosqlite.connect(DB_NAME_F.format(year=year)) as db:
         param = {'year':year}
         async with db.execute("""SELECT count(distinct p.pilot_id) [pilots]
                                         ,count(distinct f.flight_id) [flights]
@@ -69,12 +71,11 @@ async def get_eval_counts():
 
     return  pilots, flights, gliders  
 
-async def get_pilots_by_manufacturer():
+async def get_pilots_by_manufacturer(year:int):
         import pandas as pd
 
-        year = 2025
-
-        engine = create_engine(f'sqlite:///{DB_NAME}')
+        dbName= DB_NAME_F.format(year=year)
+        engine = create_engine(f'sqlite:///{dbName}')
         with engine.connect() as db:
             param = {'year':year}
             #print(param)

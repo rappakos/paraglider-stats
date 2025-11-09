@@ -12,11 +12,12 @@ def redirect(router, route_name):
 
 @aiohttp_jinja2.template('index.html')
 async def index(request):
-    year, pilots, flights, gliders = await db.get_main_counts()
+    year= 2025
+    year, pilots, flights, gliders = await db.get_main_counts(year)
 
-    e_pilots, e_flights, e_gliders = await db.get_eval_counts()
+    e_pilots, e_flights, e_gliders = await db.get_eval_counts(year)
 
-    df =  await db.get_pilots_by_manufacturer()
+    df =  await db.get_pilots_by_manufacturer(year)
     stats_by_manufacturer = df.reset_index().to_dict('records')
 
     #print(stats_by_manufacturer)

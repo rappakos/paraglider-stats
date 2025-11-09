@@ -16,8 +16,8 @@ CREATE TEMPORARY TABLE temp_gliders(glider, class, glider_norm);
 INSERT INTO temp_gliders(glider,glider_norm,class)
 VALUES
 ('OZONE Alpina 4','OZONE Alpina 4','C'),
-('OZONE Photon','OZONE Photon','C'),
-('AIRDESIGN Volt 4','AIRDESIGN Volt 4','C'),
+('OZONE Photon','OZONE Photon','C'), --2liner
+('AIRDESIGN Volt 4','AIRDESIGN Volt 4','C'), --2liner
 ('NIVIUK Artik R','NIVIUK Artik R','C'),
 ('OZONE Delta 4','OZONE Delta 4','C'),
 ('ADVANCE Sigma 11','ADVANCE Sigma 11','C'),
@@ -27,9 +27,9 @@ VALUES
 ('ADVANCE Iota DLS','ADVANCE Iota DLS','B'),
 ('OZONE Rush 6','OZONE Rush 6','B'),
 ('SUPAIR Savage','SUPAIR Savage','C'),
-('SKYWALK Mint','SKYWALK Mint','C'),
+('SKYWALK Mint','SKYWALK Mint','C'), --2liner
 ('GIN GLIDERS Bonanza 2','GIN Bonanza 2','C'),
-('GIN GLIDERS Bonanza 3','GIN Bonanza 3','C'),
+('GIN GLIDERS Bonanza 3','GIN Bonanza 3','C'), --2liner
 ('OZONE SwiftSix','OZONE SwiftSix','B'),
 ('OZONE Delta 3','OZONE Delta 3','C'),
 ('OZONE Alpina 3','OZONE Alpina 3','C'),
