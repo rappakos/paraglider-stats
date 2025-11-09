@@ -128,14 +128,15 @@ def lognormal_1( mu, sigma):
     import math
     return 0.5*(1.0 + math.erf(mu/sigma/math.sqrt(2.0)))
 
-async def get_gliders(glider:str, g_class:str):
+async def get_gliders(glider:str, g_class:str, year:int):
         import math
         import pandas as pd
         import numpy as np
 
-        year, point_goal, min_count = 2025, 100.0, 50
+        point_goal, min_count = 100.0, 50
 
-        engine = create_engine(f'sqlite:///{DB_NAME}')
+        dbName= DB_NAME_F.format(year=year)
+        engine = create_engine(f'sqlite:///{dbName}')
         with engine.connect() as db:
             param = {'year':year}
             #print(param)
@@ -294,7 +295,7 @@ async def get_glider(glider:str):
         'img3_b64':img3_b64
     }
 
-async def get_comparison(compare):
+async def get_comparison(year:int, compare):
         import math
         import pandas as pd
         import numpy as np   
@@ -302,9 +303,10 @@ async def get_comparison(compare):
         import plotly.graph_objects as go
         from scipy import special
 
-        year, point_goal = 2025, 100.0
+        point_goal = 100.0
 
-        engine = create_engine(f'sqlite:///{DB_NAME}')
+        dbName= DB_NAME_F.format(year=year)
+        engine = create_engine(f'sqlite:///{dbName}')
         with engine.connect() as db:
             param = {'year':year}
             #print(param)

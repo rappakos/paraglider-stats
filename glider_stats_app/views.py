@@ -89,16 +89,21 @@ async def gliders(request):
     import pandas as pd
     from datetime import datetime
 
+    year = request.rel_url.query['y'] if 'y' in request.rel_url.query else None
+    if not year:
+        year = os.environ.get('YEAR')
+
+
     glider, g_class, unclass, compare = request.rel_url.query.get('glider',''), \
                                request.rel_url.query.get('class',''), \
                                request.rel_url.query.get('unclass',''), \
-                               [g for g in request.rel_url.query.keys() if g not in ['glider','class','export','unclass']]
+                               [g for g in request.rel_url.query.keys() if g not in ['y','glider','class','export','unclass']]
     #print(compare)
 
 
 
     
-    comparison = await db.get_comparison(compare) if compare else None
+    comparison = await db.get_comparison(year, compare) if compare else None
 
     if 'export' in request.rel_url.query.keys():
         # other data
@@ -115,7 +120,7 @@ async def gliders(request):
         df_unclass = pd.DataFrame(await db.get_unclassed_gliders(glider='', top=1000))
 
         headers = {
-            "Content-disposition": f'attachment; filename=xcontest.2025.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
+            "Content-disposition": f'attachment; filename=xcontest.{year}.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
         }
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
@@ -130,11 +135,12 @@ async def gliders(request):
             )
 
     else:
-        unclass_gliders = await db.get_unclassed_gliders(unclass)
-        df = await db.get_gliders(glider=glider, g_class=g_class)
+        unclass_gliders = await db.get_unclassed_gliders(unclass) # no year?
+        df = await db.get_gliders(glider=glider, g_class=g_class, year=year)
         gliders = df.reset_index().to_dict('records')
 
         return {
+            'year':year,
             'unclass_gliders':unclass_gliders,
             'gliders':gliders,
             'comparison': comparison,
