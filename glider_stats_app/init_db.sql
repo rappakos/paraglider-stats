@@ -336,7 +336,8 @@ VALUES
 ('PHI Tenor 2 light','PHI Tenor 2 light','B'),
 ('DAVINCI Funky 2','DAVINCI Funky 2','B'),
 ('AIRDESIGN Vivo 2','AIRDESIGN Vivo 2','B'),
-('SUPAIR Leaf','SUPAIR Leaf','B');
+('SUPAIR Leaf','SUPAIR Leaf','B')
+;
 
 INSERT INTO temp_gliders(glider,glider_norm,class)
 VALUES
@@ -349,26 +350,32 @@ VALUES
 ('NIVIUK Artik R 2','NIVIUK Artik R 2','C'), -- 2liner
 ('NOVA VORTEX','NOVA VORTEX','C'), -- 2liner
 ('OZONE Delta 5','OZONE Delta 5','C'), -- 2liner
-('GIN GLIDERS GTO 3','GIN GLIDERS GTO 3','C'),-- 2liner
+('GIN GLIDERS GTO 3','GIN GTO 3','C'),-- 2liner
 ('PHI Beat 2 Light','PHI Beat 2 Light','B'),
 ('Unbekannt Zoom x2c','	ZOOM X2C','C'), -- 2liner
 ('NIVIUK Hiko P','NIVIUK Hiko P','B'),
 ('BGD Base 3','BGD Base 3','B'),
 ('ADVANCE Theta','ADVANCE Theta','B'),
-('GIN GTO3','GIN GLIDERS GTO 3','C'), -- 2liner
+('GIN GTO3','GIN GTO 3','C'), -- 2liner
 ('MAC PARA Eden 8','MAC PARA Eden 8','B'),
 ('PHI Beat 2','PHI Beat 2','B'),
 ('AIRDESIGN LiVi','AIRDESIGN LiVi','B'),
-('TRIPLE SEVEN Rook 4','TRIPLE SEVEN Rook 4','B'),
+('TRIPLE SEVEN Rook 4','777 Rook 4','B'),
 ('NIVIUK Hiko','NIVIUK Hiko','B'),
 ('AIRDESIGN Soar 2','AIRDESIGN Soar 2','B'),
 ('DAVINCI Mambo','DAVINCI Mambo','C'), -- 2liner
 ('SKY PARAGLIDERS Apollo 3','SKY Apollo 3','B'),
 ('OZONE Alta','OZONE Alta','A'),
 ('NIVIUK Kode P','NIVIUK Kode P','A'),
-('BGD Lynx2','BGD Lynx 2','C') -- 2liner
+('BGD Lynx2','BGD Lynx 2','C'), -- 2liner
+('SUPAIR Leaf 3 Light','SUPAIR Leaf 3 Light','B'),
+('SUPAIR Leaf 3','SUPAIR Leaf 3','B'),
+('PHI Tenor 2','PHI Tenor 2','B'),
+('SKYWALK Masala 4','SKYWALK Masala 4','A'),
+('UP Kibo X','UP Kibo X','B'),
+('APCO AVIATION Nestra Light','APCO Nestra Light','B'),
+('BGD Cure 3','BGD Cure 3','C') -- 2liner
 ;
-
 
 --DELETE FROM gliders;
 

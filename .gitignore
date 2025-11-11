@@ -160,3 +160,7 @@ cython_debug/
 #.idea/
 glider_stats.db
 *.db
+glider_stats_2025.zip
+screenshots/b_class_2025.png
+screenshots/manufacturer_2025.png
+screenshots/c_class_2025.png
