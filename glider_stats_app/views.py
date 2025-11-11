@@ -80,11 +80,23 @@ async def delete_pilots(request):
 
     raise redirect(request.app.router, 'pilots')
 
+
+def classify(row):
+    return f"{row[('class_prev', 'max')]}{row[('class', 'min')]}"
+
+
 @aiohttp_jinja2.template('pilots.html')
 async def pilots_delta(request):
-    # TODO
     df1 = await db.get_pilot_gliders(2025)
-    print(df1.head())
+    df2 = await db.get_pilot_gliders(2024)
+    df = pd.merge(df1, df2,how='left', on=['pilot_id'],suffixes=('', '_prev'))
+    #print(len(df))
+    #print(df.head())
+    dfagg = df.groupby(['pilot_id'])[['class','class_prev']].agg({'class': ['min', 'max'], 'class_prev': ['min', 'max']})
+    #print(dfagg.columns.values)
+    dfagg['delta'] = dfagg.apply(classify, axis=1)
+    dfagg = dfagg.groupby(['delta']).count()
+    print(dfagg.head(20))
 
     return  {'pilots':[],
             'allow_delete': False }    
