@@ -96,7 +96,7 @@ async def get_pilots_by_manufacturer(year:int):
         df = pd.pivot_table(df,index='manufacturer', columns='class', values='pilots', fill_value=0)
         df['pilots'] = df.apply(lambda row: row.A + row.B + row.C, axis=1)
         #df['pilots'] = df.apply(lambda row: row.B + row.C, axis=1)
-        print(df.head())
+        #print(df.head())
 
         return df.sort_values(by='pilots',ascending=False)
         

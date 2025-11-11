@@ -1,6 +1,7 @@
 # views.py
 import os
 import aiohttp_jinja2
+import pandas as pd
 from aiohttp import web,streamer
 
 from . import db
@@ -22,6 +23,14 @@ async def index(request):
     e_pilots, e_flights, e_gliders = await db.get_eval_counts(year)
 
     df =  await db.get_pilots_by_manufacturer(year)
+    
+    if year in [2025]:
+        df_prev = await db.get_pilots_by_manufacturer(year-1)
+        df = pd.merge(df, df_prev, how="left", on=["manufacturer"],suffixes=('', '_prev'))
+    else: 
+        # hack...
+        df = pd.merge(df, df, how="left", on=["manufacturer"],suffixes=('', '_prev'))
+
     stats_by_manufacturer = df.reset_index().to_dict('records')
 
     #print(stats_by_manufacturer)

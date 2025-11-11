@@ -3,6 +3,7 @@
 
 {% set title = "Home" %}
 
+
 {% block content %}
 <h2>XContest {{year}}</h2>
 <div class="w3-row w3-padding-32">
@@ -43,12 +44,19 @@
                 <th># B Pilots</th>
                 <th># A Pilots</th>
             </tr>
+            {% macro render_percent(val) %}
+                {% if val > 0.05 %}
+                    <span class="w3-light-green">+{{(100*val)|round|int}} %</span>
+                {% elif val <= -0.05 %}
+                    <span class="w3-amber">{{(100*val)|round|int}} %</span>
+                {% endif %}
+            {% endmacro %}            
             {% for entry in manufacturers %}
                 <tr>
                     <td>{{ entry.manufacturer }}</td>
-                    <td>{{ entry.pilots |round|int }}</td>
-                    <td>{{ entry.C |round|int }}</td>
-                    <td>{{ entry.B |round|int }}</td>
+                    <td>{{ entry.pilots |round|int }} {{render_percent(1.0-entry.pilots_prev/entry.pilots) }}</td>
+                    <td>{{ entry.C |round|int }} {{render_percent(1.0-(0.001+entry.C_prev)/(0.001+entry.C)) }}</td>
+                    <td>{{ entry.B |round|int }} {{render_percent(1.0-(0.001+entry.B_prev)/(0.001+entry.B)) }}</td>
                     <td>{{ entry.A |round|int }}</td>
                 </tr>
             {% endfor %}

@@ -309,7 +309,7 @@ VALUES
 ('NOVA CODEX','NOVA CODEX','C'), -- 2liner
 ('NIVIUK Ikuma 3','NIVIUK Ikuma 3','B'),
 ('AIRDESIGN Volt 5','AIRDESIGN Volt 5','C'), -- 2liner
-('MAC PARA Verve','MAC PARA Verve','C'),  -- 2liner
+('MAC PARA Verve','MACPARA Verve','C'),  -- 2liner
 ('PHI Scala 2 light','PHI Scala 2 light','C'),  -- 2liner
 ('NIVIUK Ikuma 3 P','NIVIUK Ikuma 3 P','B'),
 ('NIVIUK Ikuma 3P','NIVIUK Ikuma 3 P','B'),
@@ -357,7 +357,7 @@ VALUES
 ('BGD Base 3','BGD Base 3','B'),
 ('ADVANCE Theta','ADVANCE Theta','B'),
 ('GIN GTO3','GIN GTO 3','C'), -- 2liner
-('MAC PARA Eden 8','MAC PARA Eden 8','B'),
+('MAC PARA Eden 8','MACPARA Eden 8','B'),
 ('PHI Beat 2','PHI Beat 2','B'),
 ('AIRDESIGN LiVi','AIRDESIGN LiVi','B'),
 ('TRIPLE SEVEN Rook 4','777 Rook 4','B'),
