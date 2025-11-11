@@ -71,6 +71,28 @@ async def get_eval_counts(year:int):
 
     return  pilots, flights, gliders  
 
+async def get_pilot_gliders(year:int):
+    import pandas as pd
+
+    dbName= DB_NAME_F.format(year=year)
+    engine = create_engine(f'sqlite:///{dbName}')
+    with engine.connect() as db:
+        param = {'year':year}
+        #print(param)
+        df  = pd.read_sql_query(text(f"""
+                            SELECT p.pilot_id,
+                                   g.glider_norm,
+                                   g.class
+                                 FROM pilots p
+                                 INNER JOIN flights f ON f.pilot_id=p.pilot_id
+                                 INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                 WHERE p.year = :year
+                                 GROUP BY p.pilot_id,
+                                        g.glider_norm,
+                                        g.class
+                            """), db, params=param)
+        return df
+
 async def get_pilots_by_manufacturer(year:int):
         import pandas as pd
 

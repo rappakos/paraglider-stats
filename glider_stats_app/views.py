@@ -80,6 +80,14 @@ async def delete_pilots(request):
 
     raise redirect(request.app.router, 'pilots')
 
+@aiohttp_jinja2.template('pilots.html')
+async def pilots_delta(request):
+    # TODO
+    df1 = await db.get_pilot_gliders(2025)
+    print(df1.head())
+
+    return  {'pilots':[],
+            'allow_delete': False }    
 
 @streamer
 async def file_sender(writer, xlsx_data=None):
