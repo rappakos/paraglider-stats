@@ -313,7 +313,7 @@ VALUES
 ('PHI Scala 2 light','PHI Scala 2 light','C'),  -- 2liner
 ('NIVIUK Ikuma 3 P','NIVIUK Ikuma 3 P','B'),
 ('NIVIUK Ikuma 3P','NIVIUK Ikuma 3 P','B'),
-('GIN GLIDERS Camino 2','GIN Camino 2','C'),
+('GIN GLIDERS Camino 2','GIN Camino 2','C'), -- 2liner
 ('PHI Scala 2','PHI Scala 2','C'),  -- 2liner
 ('ZOOM PARAGLIDERS X2C','ZOOM X2C','C'),  -- 2liner
 ('ZOOM X2C','ZOOM X2C','C'),
@@ -374,7 +374,92 @@ VALUES
 ('SKYWALK Masala 4','SKYWALK Masala 4','A'),
 ('UP Kibo X','UP Kibo X','B'),
 ('APCO AVIATION Nestra Light','APCO Nestra Light','B'),
-('BGD Cure 3','BGD Cure 3','C') -- 2liner
+('BGD Cure 3','BGD Cure 3','C'), -- 2liner
+('GIN Camino 2','GIN Camino 2','C'), -- 2liner
+('GIN Avid','GIN Avid','B'),
+('GIN GLIDERS Calypso 2','GIN Calypso 2','B'),
+('GIN GTO 3','GIN GTO 3','C'), -- 2liner
+('GIN GLIDERS Bolero 7','GIN Bolero 7','A'),
+('GIN Bolero 7','GIN Bolero 7','A'),
+('DAVINCI Classic 2','DAVINCI Classic 2','A'),
+('DAVINCI Rhythm2','DAVINCI Rhythm2','A'),
+('UP Lhotse','UP Lhotse','B'),
+('UP Kangri X','UP Kangri X','B'),
+('UP Rimo','UP Rimo','A'),
+('SOL SPORTS Atmus 3','SOL Atmus 3','B'),
+('PHI Symphonia 2 light','PHI Symphonia 2 light','A'),
+('NERVURES Spantik 2','NERVURES Spantik 2','B'),
+('ADVANCE Sigma 7','ADVANCE Sigma 7','C'),
+('Advance Sigma 12','Advance Sigma DLS','C'),
+('Advance IotaDLS', 'ADVANCE Iota DLS','B'),
+('Advance Epsilon9', 'ADVANCE Epsilon 9','B'),
+('ADVANCE Theta ULS 25', 'ADVANCE Theta ULS','B'),
+('Advance Sigma DLS 24', 'Advance Sigma DLS','C'),
+('Advance Iota DLS 25', 'ADVANCE Iota DLS','B'),
+('Advance Epsilon 10 DLS', 'ADVANCE Epsilon DLS','B'),
+('WAY Ruby','WAY Ruby','B'),
+('NIVIUK Artik 3','NIVIUK Artik 3','C'),
+('NIVIUK Ikuma3','NIVIUK Ikuma 3','B'),
+('NIVIUK Hook 6P','NIVIUK Hook 6 P','B'),
+('NIVIUK Hook6','NIVIUK Hook 6','B'),
+('NIVIUK Artik R2','NIVIUK Artik R 2','C'), -- 2liner
+('Niviuk Ikuma3p','Niviuk Ikuma 3 P','B'),
+('NIVIUK ArtikR','NIVIUK Artik R','C'), -- 2liner
+('Niviuk Ikuma P 3','Niviuk Ikuma 3 P','B'),
+('Niviuk Artik 7','NIVIUK Artik 7 P','C'),
+('NIVIUK Niviuk ikuma 3p','Niviuk Ikuma 3 P','B'),
+('BGD Breeze','BGD Breeze','B'),
+('BGD Base Lite','BGD Base Lite','B'),
+('BGD Cure3','BGD Cure 3','C'), -- 2liner
+('GRADIENT Nevada','GRADIENT Nevada','B'),
+('FLOW PARAGLIDERS F2 Light','FLOW F2 Light','B'),
+('FLOW PARAGLIDERS Mystic+','FLOW Mystic+','C'), -- 2liner
+('FLOW Mystic','FLOW Mystic','C'), -- 2liner
+('FLOW Cosmos 2','FLOW Cosmos 2','B'),
+('FLOW Mystic+','FLOW Mystic+','C'), --2liner
+('FLOW PARAGLIDERS Cosmos 2','FLOW Cosmos 2','B'),
+('FLOW Mystic +','FLOW Mystic+','C'), --2liner
+('FLOW Cosmos2','FLOW Cosmos 2','B'),
+('Flow Paragliders Freedom2','FLOW Freedom 2','B'),
+('Photon','OZONE Photon','C'), --2liner
+('SKYWALK Arak Air2','SKYWALK Arak Air2','B'),
+('SWING Serac RS','SWING Serac RS','B'),
+('SWING Serac','SWING Serac RS','B'),
+('SOL SPORTS Sycross','SOL Sycross','B'),
+('SOL SPORTS Atmus 2','SOL Atmus 2','B'),
+('SKYWALK Mescal 4','SKYWALK Mescal 4','A'),
+('Skywalk Cumeo2','Skywalk Cumeo 2','B'),
+('SKYWALK Masala3','SKYWALK Masala 3','A'),
+('SKYWALK Cayenne 4','SKYWALK Cayenne 4','C'),
+('SKYWALK Arriba 3','SKYWALK Arriba 3','B'),
+('SKYWALK ArakAir','SKYWALK Arak Air','B'),
+('Skywalk Arak2','Skywalk Arak 2','B'),
+('SKYWALK Tequila6','SKYWALK Tequila 6','B'),
+('NOVA ION 2','NOVA ION 2','B'),
+('NOVA AONIC Light','NOVA AONIC Light','A'),
+('NOVA Mentor 7 L','NOVA Mentor 7','B'),
+('Nova Ion7','Nova Ion 7','B'),
+('Nova Ion7light','NOVA Ion 7 Light','B'),
+('Nova Ion7 light','NOVA Ion 7 Light','B'),
+('NOVA Mentor7','NOVA Mentor 7','B'),
+('Nova Vortex M','Nova Vortex','C'), -- 2liner
+('Nova Vortex XXS','Nova Vortex','C'), -- 2liner
+('NOVA Vortex MS','Nova Vortex','C'), -- 2liner
+('PHI Scala2','PHI Scala 2','C' ), -- 2liner
+('PHI Symphonia2','PHI Symphonia 2','A'),
+('PHI Symphonia Light 2', 'PHI Symphonia 2 light','A'),
+('AIR DESIGN Volt 5','AIRDESIGN Volt 5','C'), -- 2liner
+('AIRDESIGN Volt5','AIRDESIGN Volt 5','C'), -- 2liner
+('AIR DESIGN Rise 5','AIRDESIGN Rise 5','B'),
+('AIRDESIGN Soar2','AIRDESIGN Soar 2','B'),
+('SUPAIR Eona 3','SUPAIR Eona 3','A'),
+('Mac Para Verve 25','MACPARA VERVE','C'), -- 2liner
+('MACPARA VERVE','MACPARA VERVE','C'), -- 2liner
+('MAC PARA Aravis','MAC PARA Aravis','A'), -- h&f
+('Arak Air','SKYWALK Arak Air','B'),
+('PROFLY Leeloo 2','PROFLY Leeloo 2','B')
+
+
 ;
 
 --DELETE FROM gliders;
