@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% set title = "Pilots" %}
+
+
+{% block content %}
+<h2>XContest 2025</h2>
+<h3>Change 2024 to 2025</h3>
+
+<table class="w3-table w3-bordered">
+    <tr>
+        <th>Delta</th>
+        <th>Count</th>
+    </tr>
+    {% for p in pilots %}
+    <tr>
+        <td>{{ p.delta }}</td>
+        <td>{{ p.count }}</td>
+    </tr>    
+    {% endfor %}
+</table>
+
+{% endblock %}

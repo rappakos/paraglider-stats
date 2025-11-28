@@ -10,6 +10,7 @@ DB_NAME_F = './glider_stats_{year}.db'
 async def setup_db(app):
     app['DB_NAME'] = DB_NAME
     async with aiosqlite.connect(DB_NAME) as db:
+    #async with aiosqlite.connect(DB_NAME_F.format(year=2024)) as db:        
         # only test
         async with db.execute("SELECT 'db check'") as cursor:
             async for row in cursor:
@@ -81,15 +82,15 @@ async def get_pilot_gliders(year:int):
         #print(param)
         df  = pd.read_sql_query(text(f"""
                             SELECT p.pilot_id,
-                                   g.glider_norm,
-                                   g.class
+                                   ifnull(g.glider_norm,'???') [glider_norm],
+                                   ifnull(g.class,'?') [class]
                                  FROM pilots p
                                  INNER JOIN flights f ON f.pilot_id=p.pilot_id
-                                 INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                 LEFT JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
                                  WHERE p.year = :year
                                  GROUP BY p.pilot_id,
-                                        g.glider_norm,
-                                        g.class
+                                        ifnull(g.glider_norm,'???'),
+                                        ifnull(g.class,'?') 
                             """), db, params=param)
         return df
 
