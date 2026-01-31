@@ -5,7 +5,7 @@ class DefaultConfig:
     
     load_dotenv()
 
-    PORT = 3978
+    PORT = 3977
+    ROOT_PATH = os.getenv("GLIDER_STATS_APP_ROOT_PATH", "")
     XCONTEST_MAX_PAGE_NUM =  os.getenv("XCONTEST_MAX_PAGE_NUM", 2)
-    START_DRIVER = os.getenv("START_DRIVER", str(False)).lower() in ("yes", "y", "true", "1", "t")
     ALLOW_DELETE = os.getenv("ALLOW_DELETE", str(False)).lower() in ("yes", "y", "true", "1", "t")

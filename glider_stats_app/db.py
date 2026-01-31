@@ -8,9 +8,7 @@ DB_NAME_F = './glider_stats_{year}.db'
 
 
 async def setup_db(app):
-    app['DB_NAME'] = DB_NAME
     async with aiosqlite.connect(DB_NAME) as db:
-    #async with aiosqlite.connect(DB_NAME_F.format(year=2024)) as db:        
         # only test
         async with db.execute("SELECT 'db check'") as cursor:
             async for row in cursor:

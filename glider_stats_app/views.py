@@ -1,193 +1,169 @@
 # views.py
 import os
-import aiohttp_jinja2
+import io
+from typing import Optional
 import pandas as pd
-from aiohttp import web,streamer
+from datetime import datetime
+
+from fastapi import Request, Query
+from fastapi.responses import StreamingResponse
+from fastapi.templating import Jinja2Templates
 
 from . import db
-from . import xcontest_loader
 
-def redirect(router, route_name):
-    location = router[route_name].url_for()
-    return web.HTTPFound(location)
 
-@aiohttp_jinja2.template('index.html')
-async def index(request):
-    
-    year = request.rel_url.query['y'] if 'y' in request.rel_url.query else None
-    if not year:
-        year = os.environ.get('YEAR')
+async def index(request: Request, y: Optional[str] = Query(None)):
+    year = y if y else os.environ.get('YEAR')
     
     year, pilots, flights, gliders = await db.get_main_counts(year)
 
     e_pilots, e_flights, e_gliders = await db.get_eval_counts(year)
 
-    df =  await db.get_pilots_by_manufacturer(year)
+    df = await db.get_pilots_by_manufacturer(year)
     
-    if year in [2025,2024]:
+    if year in [2025, 2024]:
         df_prev = await db.get_pilots_by_manufacturer(year-1)
-        df = pd.merge(df, df_prev, how="left", on=["manufacturer"],suffixes=('', '_prev'))
+        df = pd.merge(df, df_prev, how="left", on=["manufacturer"], suffixes=('', '_prev'))
     else: 
         # hack...
-        df = pd.merge(df, df, how="left", on=["manufacturer"],suffixes=('', '_prev'))
+        df = pd.merge(df, df, how="left", on=["manufacturer"], suffixes=('', '_prev'))
 
     stats_by_manufacturer = df.reset_index().to_dict('records')
 
-    #print(stats_by_manufacturer)
-
-    return {
-            'year':year,
-            'total': {
-                'pilots': pilots,
-                'flights': flights,
-                'gliders': gliders
-            },
-            'evaluated': {
-                'pilots': e_pilots,
-                'flights': e_flights,
-                'gliders': e_gliders
-            },
-            'manufacturers': stats_by_manufacturer
+    context = {
+        'request': request,
+        'year': year,
+        'total': {
+            'pilots': pilots,
+            'flights': flights,
+            'gliders': gliders
+        },
+        'evaluated': {
+            'pilots': e_pilots,
+            'flights': e_flights,
+            'gliders': e_gliders
+        },
+        'manufacturers': stats_by_manufacturer
     }
-
-@aiohttp_jinja2.template('pilots.html')
-async def pilots(request):
-    pilots = await db.get_pilots()
-    #print(pilots)
-    return  {'pilots':pilots,
-            'allow_delete': request.app.config.ALLOW_DELETE }
-
-async def load_pilots(request):
-    if not request.app.config.START_DRIVER:
-        raise redirect(request.app.router, 'pilots')
-
-    if request.method == 'POST':
-        # get next batch
-        max_rank = await db.get_max_rank()
-        #print(max_rank)
-        # parse xcontest
-        driver=request.app.driver
-        pilots = await xcontest_loader.load_pilots(driver, max_rank)
-        await db.save_pilots(pilots)
-        # redirect
-        raise redirect(request.app.router, 'pilots')
-    else:
-        raise NotImplementedError("invalid?")
     
-async def delete_pilots(request):
-    if request.method == 'POST':
-        await db.delete_pilots()
+    return request.app.state.templates.TemplateResponse('index.html', context)
 
-    raise redirect(request.app.router, 'pilots')
+
+async def pilots(request: Request):
+    pilots_list = await db.get_pilots()
+    
+    context = {
+        'request': request,
+        'pilots': pilots_list,
+        'allow_delete': request.app.state.config.ALLOW_DELETE
+    }
+    
+    return request.app.state.templates.TemplateResponse('pilots.html', context)
 
 
 def classify(row):
     return f"{row[('class_prev', 'max')]}{row[('class', 'min')]}"
 
 
-@aiohttp_jinja2.template('pilots_delta.html')
-async def pilots_delta(request):
+async def pilots_delta(request: Request):
     df1 = await db.get_pilot_gliders(2025)
     df2 = await db.get_pilot_gliders(2024)
-    df = pd.merge(df1, df2,how='left', on=['pilot_id'],suffixes=('', '_prev'))
-    #print(len(df))
-    #print(df.head())
-    dfagg = df.groupby(['pilot_id'])[['class','class_prev']].agg({'class': ['min'], 'class_prev': ['max']})
+    df = pd.merge(df1, df2, how='left', on=['pilot_id'], suffixes=('', '_prev'))
+    
+    dfagg = df.groupby(['pilot_id'])[['class', 'class_prev']].agg({'class': ['min'], 'class_prev': ['max']})
     print(dfagg.columns.values)
     dfagg['delta'] = dfagg.apply(classify, axis=1)
     dfagg = dfagg.groupby('delta').count().reset_index()
-    #print(dfagg.columns.values)
-    dfagg.columns = ['delta','count','count2']
+    
+    dfagg.columns = ['delta', 'count', 'count2']
     res = dfagg.to_dict('records')
     print(res)
 
-    return  {'pilots': res,
-            'allow_delete': False }    
-
-@streamer
-async def file_sender(writer, xlsx_data=None):
-    import io
-    #print(type(xlsx_data))
-    with io.BytesIO(xlsx_data) as f:
-        chunk = f.read(2 ** 16)
-        while chunk:
-            await writer.write(chunk)
-            chunk = f.read(2 ** 16)
+    context = {
+        'request': request,
+        'pilots': res,
+        'allow_delete': False
+    }
+    
+    return request.app.state.templates.TemplateResponse('pilots_delta.html', context)
 
 
-@aiohttp_jinja2.template('gliders.html')
-async def gliders(request):
-    import io
-    import pandas as pd
-    from datetime import datetime
+async def gliders(
+    request: Request,
+    y: Optional[str] = Query(None),
+    glider: Optional[str] = Query(''),
+    g_class: Optional[str] = Query('', alias='class'),
+    unclass: Optional[str] = Query(''),
+    export: Optional[str] = Query(None)
+):
+    year = y if y else os.environ.get('YEAR')
 
-    year = request.rel_url.query['y'] if 'y' in request.rel_url.query else None
-    if not year:
-        year = os.environ.get('YEAR')
-
-
-    glider, g_class, unclass, compare = request.rel_url.query.get('glider',''), \
-                               request.rel_url.query.get('class',''), \
-                               request.rel_url.query.get('unclass',''), \
-                               [g for g in request.rel_url.query.keys() if g not in ['y','glider','class','export','unclass']]
-    #print(compare)
-
-
-
+    # Get comparison gliders from query params
+    compare = [key for key in request.query_params.keys() 
+               if key not in ['y', 'glider', 'class', 'export', 'unclass']]
     
     comparison = await db.get_comparison(year, compare) if compare else None
 
-    if 'export' in request.rel_url.query.keys():
-        # other data
+    if export is not None:
+        # Excel export
         df = await db.get_gliders(glider='', g_class='')
         df.drop(columns=['count2'], inplace=True)
         df = df.rename(columns={"glider_norm": "glider name", "count": "flight count"})
-        year, pilots, flights, gliders = await db.get_main_counts()
+        
+        year_val, pilots, flights, gliders_count = await db.get_main_counts()
         e_pilots, e_flights, e_gliders = await db.get_eval_counts() 
+        
         df_totals = pd.DataFrame([
-            ['total',pilots, flights, gliders],
-            ['evaluated',e_pilots, e_flights, e_gliders]
-        ], columns=['counts','pilots','flights','glider name'])
+            ['total', pilots, flights, gliders_count],
+            ['evaluated', e_pilots, e_flights, e_gliders]
+        ], columns=['counts', 'pilots', 'flights', 'glider name'])
+        
         df_manu = await db.get_pilots_by_manufacturer()
         df_unclass = pd.DataFrame(await db.get_unclassed_gliders(glider='', top=1000))
 
-        headers = {
-            "Content-disposition": f'attachment; filename=xcontest.{year}.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
-        }
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df_totals.to_excel(writer, sheet_name='overview',index=False)
-            df_manu.to_excel(writer, sheet_name='manufacturers',index=True)
-            df.to_excel(writer, sheet_name='gliders',index=True)
-            df_unclass.to_excel(writer, sheet_name='unevaluated',index=False)
-       
-        return web.Response(
-                body=file_sender(xlsx_data=output.getvalue()),
-                headers=headers
-            )
-
+            df_totals.to_excel(writer, sheet_name='overview', index=False)
+            df_manu.to_excel(writer, sheet_name='manufacturers', index=True)
+            df.to_excel(writer, sheet_name='gliders', index=True)
+            df_unclass.to_excel(writer, sheet_name='unevaluated', index=False)
+        
+        output.seek(0)
+        
+        filename = f'xcontest.{year}.sport.{datetime.now().strftime("%Y%d%m.%H%M%S")}.xlsx'
+        headers = {
+            "Content-Disposition": f'attachment; filename={filename}'
+        }
+        
+        return StreamingResponse(
+            output,
+            media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            headers=headers
+        )
     else:
-        unclass_gliders = await db.get_unclassed_gliders(unclass) # no year?
+        unclass_gliders = await db.get_unclassed_gliders(unclass)
         df = await db.get_gliders(glider=glider, g_class=g_class, year=year)
-        gliders = df.reset_index().to_dict('records')
+        gliders_list = df.reset_index().to_dict('records')
 
-        return {
-            'year':year,
-            'unclass_gliders':unclass_gliders,
-            'gliders':gliders,
+        context = {
+            'request': request,
+            'year': year,
+            'unclass_gliders': unclass_gliders,
+            'gliders': gliders_list,
             'comparison': comparison,
             'filter': {
-                'glider':glider,
-                'class':g_class,
+                'glider': glider,
+                'class': g_class,
                 'compare': compare,
                 'unclass': unclass
             }
         }
+        
+        return request.app.state.templates.TemplateResponse('gliders.html', context)
 
-@aiohttp_jinja2.template('glider.html')
-async def glider(request):
-    glider = request.match_info['glider']
 
+async def glider(request: Request, glider: str):
     data = await db.get_glider(glider)
-
-    return data
+    data['request'] = request
+    
+    return request.app.state.templates.TemplateResponse('glider.html', data)

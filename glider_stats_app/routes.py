@@ -1,16 +1,10 @@
-import pathlib
-
-from .views import index,pilots,load_pilots,delete_pilots,pilots_delta,gliders,glider
-
-PROJECT_ROOT = pathlib.Path(__file__).parent
+from .views import index, pilots, pilots_delta, gliders, glider
 
 
 def setup_routes(app):
-    app.router.add_get('/', index)
-    app.router.add_get('/pilots', pilots, name='pilots') # show current
-    app.router.add_post('/pilots', load_pilots, name='load_pilots') # download a new batch
-    app.router.add_post('/pilots/delete', delete_pilots, name='delete_pilots')
-    app.router.add_get('/pilots/delta', pilots_delta, name='pilots_delta')
-
-    app.router.add_get('/gliders', gliders, name='gliders')
-    app.router.add_get('/gliders/{glider}', glider, name='glider')
+    # GET routes
+    app.add_api_route('/', index, methods=['GET'], name='index')
+    app.add_api_route('/pilots', pilots, methods=['GET'], name='pilots')
+    app.add_api_route('/pilots/delta', pilots_delta, methods=['GET'], name='pilots_delta')
+    app.add_api_route('/gliders', gliders, methods=['GET'], name='gliders')
+    app.add_api_route('/gliders/{glider}', glider, methods=['GET'], name='glider')

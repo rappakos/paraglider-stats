@@ -1,12 +1,11 @@
-aiohttp
-aiohttp_jinja2
+fastapi
+uvicorn[standard]
+jinja2
 aiosqlite
 numpy
 pandas
 xlsxwriter
-bs4
 python-dotenv
-webdriver-manager
 sqlalchemy
 plotly
 kaleido

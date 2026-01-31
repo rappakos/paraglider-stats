@@ -7,15 +7,15 @@ Tool to download paraglider flights (eg from xcontest) and evaluate them
 
 0. Check out the project
 1. Set up env file: Make a copy of `template.env` and rename to `.env`
-2. Install requirements: In a terminal run `python -m pip install -r requirements.txt`
+2. Install requirements: In a terminal run `pip install -r requirements.txt`
 3. Start app: In a terminal run `python app.py`
-4. Navigate to the app [http://localhost:3978](http://localhost:3978)
+4. Navigate to the app [http://localhost:3977](http://localhost:3977)
 5. Go to the `pilots`, get data
 
 
 ## Data 
 
-Flights scraped from [xcontest 2023 PG sport ranking](https://www.xcontest.org/2023/world/en/ranking-pg-sport/).
+Flights scraped from [xcontest 2025 PG sport ranking](https://www.xcontest.org/2025/world/en/ranking-pg-sport/).
 Out of the ~24K pilots there, roughly the first 15k (therefore ca 90k flights) are taken into account. In the sport class at around rank 15000 the pilots have approximately 10 XC-points per flight.
 
 

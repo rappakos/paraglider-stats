@@ -1,7 +1,7 @@
 {# _menu.html #}
 
 <nav class="w3-bar w3-black">
-  <a href="/" class="w3-button w3-round-large">Home</a>
-  <a href="/pilots" class="w3-button w3-round-large">Pilots</a>
-  <a href="/gliders" class="w3-button w3-round-large">Gliders</a>
+  <a href="{{ url_for('index') }}" class="w3-button w3-round-large">Home</a>
+  <a href="{{ url_for('pilots') }}" class="w3-button w3-round-large">Pilots</a>
+  <a href="{{ url_for('gliders') }}" class="w3-button w3-round-large">Gliders</a>
 </nav>

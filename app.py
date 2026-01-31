@@ -1,55 +1,49 @@
 import sys
 
-import aiohttp_jinja2
-import jinja2
-from aiohttp import web
-
+from fastapi import FastAPI
+from fastapi.templating import Jinja2Templates
+import uvicorn
 
 from glider_stats_app.routes import setup_routes
 from glider_stats_app.middlewares import setup_middlewares
 from glider_stats_app.db import setup_db
-from glider_stats_app.driver import setup_web_driver
 
 from config import DefaultConfig
-
 
 
 CONFIG = DefaultConfig()
 
 
-
-async def init_app(argv=None):
-
-    app = web.Application()
-
-    #app['config'] = get_config(argv)
-    app.config = CONFIG
-
-    # setup Jinja2 template renderer
-    aiohttp_jinja2.setup(
-        app, loader=jinja2.PackageLoader('glider_stats_app', 'templates'))
-
-    # setup db
-    await setup_db(app)
-
-    if bool(CONFIG.START_DRIVER):
-        setup_web_driver(app)    
-
-    # setup views and routes
+def create_app():
+    app = FastAPI(root_path=CONFIG.ROOT_PATH)
+    
+    app.state.config = CONFIG
+    app.state.templates = Jinja2Templates(directory="glider_stats_app/templates")
+    
+    # setup routes
     setup_routes(app)
-
+    
+    # setup middleware/exception handlers
     setup_middlewares(app)
-
+    
     return app
 
 
+app = create_app()
+
+
+@app.on_event("startup")
+async def startup_event():
+    await setup_db(app)
+
+
 def main(argv):
-
-    app = init_app(argv)
-
-    web.run_app(app,
-                host='localhost',
-                port=CONFIG.PORT)
+    uvicorn.run(
+        "app:app",
+        host='localhost',
+        port=CONFIG.PORT,
+        reload=True
+    )
 
 
 if __name__ == '__main__':
