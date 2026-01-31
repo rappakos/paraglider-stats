@@ -70,78 +70,107 @@ async def get_eval_counts(year:int):
 
     return  pilots, flights, gliders  
 
-async def get_pilot_gliders(year:int):
+async def get_pilot_gliders(year: int):
     import pandas as pd
 
-    dbName= DB_NAME_F.format(year=year)
-    engine = create_engine(f'sqlite:///{dbName}')
-    with engine.connect() as db:
-        param = {'year':year}
-        #print(param)
-        df  = pd.read_sql_query(text(f"""
-                            SELECT p.pilot_id,
-                                   ifnull(g.glider_norm,'???') [glider_norm],
-                                   ifnull(g.class,'?') [class]
-                                 FROM pilots p
-                                 INNER JOIN flights f ON f.pilot_id=p.pilot_id
-                                 LEFT JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
-                                 WHERE p.year = :year
-                                 GROUP BY p.pilot_id,
-                                        ifnull(g.glider_norm,'???'),
-                                        ifnull(g.class,'?') 
-                            """), db, params=param)
-        return df
+    # Input validation
+    if year < 2020 or year > 2025:
+        year = 2025
 
-async def get_pilots_by_manufacturer(year:int):
+    try:
+        dbName = DB_NAME_F.format(year=year)
+        engine = create_engine(f'sqlite:///{dbName}')
+        
+        try:
+            with engine.connect() as db:
+                param = {'year': year}
+                df = pd.read_sql_query(text("""
+                                    SELECT p.pilot_id,
+                                           ifnull(g.glider_norm,'???') [glider_norm],
+                                           ifnull(g.class,'?') [class]
+                                     FROM pilots p
+                                     INNER JOIN flights f ON f.pilot_id=p.pilot_id
+                                     LEFT JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                     WHERE p.year = :year
+                                     GROUP BY p.pilot_id,
+                                            ifnull(g.glider_norm,'???'),
+                                            ifnull(g.class,'?') 
+                                """), db, params=param)
+                return df
+        finally:
+            engine.dispose()
+    except Exception as e:
+        print(f"Error in get_pilot_gliders: {e}")
+        import pandas as pd
+        return pd.DataFrame()
+
+async def get_pilots_by_manufacturer(year: int):
         import pandas as pd
 
-        dbName= DB_NAME_F.format(year=year)
-        engine = create_engine(f'sqlite:///{dbName}')
-        with engine.connect() as db:
-            param = {'year':year}
-            #print(param)
-            df  = pd.read_sql_query(text(f"""
-                        SELECT  g.glider_norm
-                                    , g.class
-                                    , count( distinct f.pilot_id) [pilots]
-                        FROM flights f 
-                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
-                        GROUP BY g.glider_norm COLLATE NOCASE, g.class
-                        ORDER BY count( distinct f.pilot_id) DESC
-                    """), db, params=param)
-        
-        df['manufacturer'] = df.apply(lambda row: row.glider_norm.split(' ')[0], axis=1)
-        
-        df = df.groupby(['manufacturer','class'])['pilots'].agg([('pilots', sum)]).reset_index()
-        #print(df.head())
-        df = pd.pivot_table(df,index='manufacturer', columns='class', values='pilots', fill_value=0)
-        df['pilots'] = df.apply(lambda row: row.A + row.B + row.C, axis=1)
-        #df['pilots'] = df.apply(lambda row: row.B + row.C, axis=1)
-        #print(df.head())
+        # Input validation
+        if year < 2020 or year > 2025:
+            year = 2025
 
-        return df.sort_values(by='pilots',ascending=False)
+        try:
+            dbName = DB_NAME_F.format(year=year)
+            engine = create_engine(f'sqlite:///{dbName}')
+            
+            try:
+                with engine.connect() as db:
+                    param = {'year': year}
+                    df = pd.read_sql_query(text("""
+                                SELECT  g.glider_norm
+                                            , g.class
+                                            , count( distinct f.pilot_id) [pilots]
+                                FROM flights f 
+                                INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                GROUP BY g.glider_norm COLLATE NOCASE, g.class
+                                ORDER BY count( distinct f.pilot_id) DESC
+                            """), db, params=param)
+            finally:
+                engine.dispose()
+            
+            df['manufacturer'] = df.apply(lambda row: row.glider_norm.split(' ')[0], axis=1)
+            
+            df = df.groupby(['manufacturer', 'class'])['pilots'].agg([('pilots', sum)]).reset_index()
+            df = pd.pivot_table(df, index='manufacturer', columns='class', values='pilots', fill_value=0)
+            df['pilots'] = df.apply(lambda row: row.A + row.B + row.C, axis=1)
+
+            return df.sort_values(by='pilots', ascending=False)
+        except Exception as e:
+            print(f"Error in get_pilots_by_manufacturer: {e}")
+            import pandas as pd
+            return pd.DataFrame()
         
 
-async def get_unclassed_gliders(glider:str,top:int=20):
-        year = 2025
+async def get_unclassed_gliders(glider: str, top: int = 20, year: int = 2025):
+        # Input validation
+        if top < 1 or top > 1000:
+            top = 20
+        if year < 2020 or year > 2025:
+            year = 2025
+        
         gliders = []
-        #print(glider)
-        async with aiosqlite.connect(DB_NAME) as db:
-            param = {'year':year}
-            async with db.execute(f"""SELECT f.glider, count(*) [count]
-                    FROM flights f 
-                    WHERE NOT EXISTS (SELECT 1 FROM gliders g WHERE g.glider=f.glider COLLATE NOCASE)
-                        AND f.glider <> ''
-                        AND LOWER(f.glider) like '%{glider.lower()}%'
-                    GROUP BY f.glider  
-                    --HAVING count(*) >= 10
-                    ORDER BY count(*) DESC
-                    LIMIT {top} """,param) as cursor:
-                async for row in cursor:
-                    gliders.append({
-                        'glider': row[0],
-                        'flight_count':  row[1]
-                    })
+        try:
+            async with aiosqlite.connect(DB_NAME) as db:
+                # Use parameterized query with LIKE pattern
+                glider_pattern = f"%{glider.lower()}%"
+                param = {'year': year, 'glider_pattern': glider_pattern, 'top': top}
+                async with db.execute("""SELECT f.glider, count(*) [count]
+                        FROM flights f 
+                        WHERE NOT EXISTS (SELECT 1 FROM gliders g WHERE g.glider=f.glider COLLATE NOCASE)
+                            AND f.glider <> ''
+                            AND LOWER(f.glider) LIKE :glider_pattern
+                        GROUP BY f.glider  
+                        ORDER BY count(*) DESC
+                        LIMIT :top """, param) as cursor:
+                    async for row in cursor:
+                        gliders.append({
+                            'glider': row[0],
+                            'flight_count': row[1]
+                        })
+        except Exception as e:
+            print(f"Error in get_unclassed_gliders: {e}")
         return gliders
 
 
@@ -149,48 +178,61 @@ def lognormal_1( mu, sigma):
     import math
     return 0.5*(1.0 + math.erf(mu/sigma/math.sqrt(2.0)))
 
-async def get_gliders(glider:str, g_class:str, year:int):
+async def get_gliders(glider: str, g_class: str, year: int):
         import math
         import pandas as pd
         import numpy as np
 
+        # Input validation
+        if year < 2020 or year > 2025:
+            year = 2025
+
         point_goal, min_count = 100.0, 50
 
-        dbName= DB_NAME_F.format(year=year)
-        engine = create_engine(f'sqlite:///{dbName}')
-        with engine.connect() as db:
-            param = {'year':year}
-            #print(param)
-            df  = pd.read_sql_query(text(f"""
-                        SELECT 
-                                    g.glider_norm
-                                    , g.class
-                                    , cast(f.flight_points as float) [xc]
-                        FROM flights f 
-                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
-                        WHERE (LOWER(g.glider_norm) like '%{glider.lower()}%' AND LOWER(g.class) like '%{g_class.lower()}%')
-                    """), db, params=param)
-        #print(df.head())    
-        
-        df = df.groupby(['glider_norm','class'])['xc'].agg([
-            ('count', len),
-            ('count2', len),
-            ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
-            ('sigma', lambda value: np.std(np.log(value/point_goal)) )
-        ])
-
-        if not df.empty:
-            df['confidence'] =  df.apply(lambda row: 1.96*math.sqrt(row.sigma**2/float(row.count2) + 0.5*row.sigma**4/(row.count2-1.0)) ,axis=1)
-            df['p50'] = df.apply(lambda row: lognormal_1(row.mu-math.log(0.5),row.sigma), axis=1)
-            df['p100'] = df.apply(lambda row: lognormal_1(row.mu,row.sigma), axis=1)
-            df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0),row.sigma), axis=1)
+        try:
+            dbName = DB_NAME_F.format(year=year)
+            engine = create_engine(f'sqlite:///{dbName}')
             
-            #print(df.columns)
-            df = df[df['count'] > min_count ].sort_values(by=['p100'], ascending=False)
-        else:
-            print('empty')
+            try:
+                with engine.connect() as db:
+                    # Use parameterized query with LIKE patterns
+                    glider_pattern = f"%{glider.lower()}%"
+                    class_pattern = f"%{g_class.lower()}%"
+                    param = {'year': year, 'glider_pattern': glider_pattern, 'class_pattern': class_pattern}
+                    
+                    df = pd.read_sql_query(text("""
+                                SELECT 
+                                            g.glider_norm
+                                            , g.class
+                                            , cast(f.flight_points as float) [xc]
+                                FROM flights f 
+                                INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                WHERE (LOWER(g.glider_norm) LIKE :glider_pattern AND LOWER(g.class) LIKE :class_pattern)
+                            """), db, params=param)
+            finally:
+                engine.dispose()
+            
+            df = df.groupby(['glider_norm', 'class'])['xc'].agg([
+                ('count', len),
+                ('count2', len),
+                ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
+                ('sigma', lambda value: np.std(np.log(value/point_goal)) )
+            ])
 
-        #print(df.head(10))
+            if not df.empty:
+                df['confidence'] = df.apply(lambda row: 1.96*math.sqrt(row.sigma**2/float(row.count2) + 0.5*row.sigma**4/(row.count2-1.0)), axis=1)
+                df['p50'] = df.apply(lambda row: lognormal_1(row.mu-math.log(0.5), row.sigma), axis=1)
+                df['p100'] = df.apply(lambda row: lognormal_1(row.mu, row.sigma), axis=1)
+                df['p200'] = df.apply(lambda row: lognormal_1(row.mu-math.log(2.0), row.sigma), axis=1)
+                
+                df = df[df['count'] > min_count].sort_values(by=['p100'], ascending=False)
+            else:
+                print('empty')
+
+        except Exception as e:
+            print(f"Error in get_gliders: {e}")
+            import pandas as pd
+            df = pd.DataFrame()
 
         return df
 
@@ -326,42 +368,66 @@ async def get_comparison(year:int, compare):
 
         point_goal = 100.0
 
-        dbName= DB_NAME_F.format(year=year)
-        engine = create_engine(f'sqlite:///{dbName}')
-        with engine.connect() as db:
-            param = {'year':year}
-            #print(param)
-            comp_list = "','".join([c.replace('-',' ') for c in compare])
-            df  = pd.read_sql_query(text(f"""
-                        SELECT  g.glider_norm [glider]
-                                    , cast(f.flight_points as float) [xc]
-                                    , row_number() over(partition by g.glider_norm order by  cast(f.flight_points as float)  ) [row_num]
-                        FROM flights f 
-                        INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
-                        WHERE LOWER(g.glider_norm) in ('{comp_list}') 
-                    """), db, params=param)
+        # Input validation
+        if not compare or len(compare) == 0:
+            return None
+        if len(compare) > 20:  # Limit number of comparisons
+            compare = compare[:20]
 
-        aggr = df.groupby(['glider'])['xc'].agg([
-            ('count', len),
-            ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
-            ('sigma', lambda value: np.std(np.log(value/point_goal)) )
-        ]).to_dict()
-        #print(aggr)
-        df['x'] = df.apply(lambda row: math.log(row.xc/point_goal) , axis=1)
-        df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider] , axis=1)
-        df['ybar'] = df.apply(lambda row: math.sqrt(2.0)*special.erfinv(2.0*(row.row_num/aggr['count'][row.glider]-0.5)) , axis=1)
+        try:
+            dbName = DB_NAME_F.format(year=year)
+            engine = create_engine(f'sqlite:///{dbName}')
+            
+            try:
+                with engine.connect() as db:
+                    # Safely handle the IN clause with parameterized query
+                    # Normalize glider names (replace dashes with spaces)
+                    normalized_gliders = [c.replace('-', ' ').lower() for c in compare]
+                    
+                    # Create placeholders for IN clause
+                    placeholders = ','.join([f':glider_{i}' for i in range(len(normalized_gliders))])
+                    param = {'year': year}
+                    for i, glider in enumerate(normalized_gliders):
+                        param[f'glider_{i}'] = glider
+                    
+                    df = pd.read_sql_query(text(f"""
+                                SELECT  g.glider_norm [glider]
+                                            , cast(f.flight_points as float) [xc]
+                                            , row_number() over(partition by g.glider_norm order by  cast(f.flight_points as float)  ) [row_num]
+                                FROM flights f 
+                                INNER JOIN gliders g ON g.glider=f.glider COLLATE NOCASE
+                                WHERE LOWER(g.glider_norm) IN ({placeholders}) 
+                            """), db, params=param)
+            finally:
+                engine.dispose()
 
-        raw=False
-        if raw:
-            fig = px.scatter( df, x='y', y='xc', color='glider')
-            fig.update_xaxes(title='flight number/number of flights',range=[0,1])
-        else:
-            fig = px.scatter( df, x='ybar', y='x', color='glider')
-            fig.update_yaxes(title='log(xc points/100)',range=[-3,3])
-            #fig.update_yaxes(title='flight number/number of flights',range=[0,1])
-            fig.update_xaxes(title='erf inv (flight number/number of flights)',range=[-3,3])
+            if df.empty:
+                return None
 
-        return map_fig_to_b64(fig)
+            aggr = df.groupby(['glider'])['xc'].agg([
+                ('count', len),
+                ('mu', lambda value: np.mean(np.log(value/point_goal)) ),
+                ('sigma', lambda value: np.std(np.log(value/point_goal)) )
+            ]).to_dict()
+            
+            df['x'] = df.apply(lambda row: math.log(row.xc/point_goal), axis=1)
+            df['y'] = df.apply(lambda row: row.row_num/aggr['count'][row.glider], axis=1)
+            df['ybar'] = df.apply(lambda row: math.sqrt(2.0)*special.erfinv(2.0*(row.row_num/aggr['count'][row.glider]-0.5)), axis=1)
+
+            raw = False
+            if raw:
+                fig = px.scatter(df, x='y', y='xc', color='glider')
+                fig.update_xaxes(title='flight number/number of flights', range=[0, 1])
+            else:
+                fig = px.scatter(df, x='ybar', y='x', color='glider')
+                fig.update_yaxes(title='log(xc points/100)', range=[-3, 3])
+                fig.update_xaxes(title='erf inv (flight number/number of flights)', range=[-3, 3])
+
+            return map_fig_to_b64(fig)
+            
+        except Exception as e:
+            print(f"Error in get_comparison: {e}")
+            return None
 
 
 async def get_pilots():
@@ -401,6 +467,8 @@ async def delete_pilots():
 
 async def save_pilots(pilots):
     year = 2025 # TODO pass as param?
+
+    raise NotImplementedError("Disabled until new web scraping logic is ready")
     async with aiosqlite.connect(DB_NAME) as db:
         for pilot in pilots:
             params = {
@@ -410,11 +478,11 @@ async def save_pilots(pilots):
                 'pilot_id': pilot['pilot_id']
             }
             #print(params)
-            res = await db.execute_insert("""
-                    INSERT INTO pilots ([year],[xc_rank], username, pilot_id)
-                    SELECT :year, :xc_rank, :username, :pilot_id
-                    WHERE NOT EXISTS (SELECT 1 FROM pilots p WHERE p.[year]=:year AND p.[pilot_id]=:pilot_id )
-                """, params)
+            #res = await db.execute_insert("""
+            #        INSERT INTO pilots ([year],[xc_rank], username, pilot_id)
+            #        SELECT :year, :xc_rank, :username, :pilot_id
+            #        WHERE NOT EXISTS (SELECT 1 FROM pilots p WHERE p.[year]=:year AND p.[pilot_id]=:pilot_id )
+            #    """, params)
             #print(res)
             if pilot['flights']:
                 for flight in pilot['flights']:
@@ -428,11 +496,11 @@ async def save_pilots(pilots):
                         'glider': flight['glider'],
                         'details': flight['details']
                     }
-                    await db.execute("""
-                        INSERT INTO flights
-                                (pilot_id, flight_id, launch,flight_type,flight_length,flight_points, glider, details)
-                        SELECT :pilot_id, :flight_id, :launch,:flight_type,:flight_length,:flight_points, :glider, :details
-                        WHERE NOT EXISTS (SELECT 1 FROM flights f WHERE f.flight_id = :flight_id)
-                        """, params)
+                    #await db.execute("""
+                    #    INSERT INTO flights
+                    #            (pilot_id, flight_id, launch,flight_type,flight_length,flight_points, glider, details)
+                    #    SELECT :pilot_id, :flight_id, :launch,:flight_type,:flight_length,:flight_points, :glider, :details
+                    #    WHERE NOT EXISTS (SELECT 1 FROM flights f WHERE f.flight_id = :flight_id)
+                    #    """, params)
 
         await db.commit()
