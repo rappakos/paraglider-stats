@@ -7,6 +7,17 @@ INIT_SCRIPT = './glider_stats_app/init_db.sql'
 DB_NAME_F = './glider_stats_{year}.db'
 
 
+def validate_year(year) -> int:
+    """Convert year to int and validate range. Returns default 2025 if invalid."""
+    try:
+        year_int = int(year) if year is not None else 2025
+        if year_int < 2000 or year_int > 2100:
+            return 2025
+        return year_int
+    except (ValueError, TypeError):
+        return 2025
+
+
 async def setup_db(app):
     async with aiosqlite.connect(DB_NAME) as db:
         # only test
@@ -21,7 +32,8 @@ async def setup_db(app):
             await db.commit()
 
 
-async def get_main_counts(year:int):
+async def get_main_counts(year):
+    year = validate_year(year)
     pilots, flights, gliders = 0,0,0
     async with aiosqlite.connect(DB_NAME_F.format(year=year)) as db:
         param = {'year':year}
@@ -51,7 +63,8 @@ async def get_main_counts(year:int):
 
     return  year, pilots, flights, gliders  
 
-async def get_eval_counts(year:int):
+async def get_eval_counts(year):
+    year = validate_year(year)
     pilots, flights, gliders = 0,0,0
     async with aiosqlite.connect(DB_NAME_F.format(year=year)) as db:
         param = {'year':year}
@@ -70,12 +83,11 @@ async def get_eval_counts(year:int):
 
     return  pilots, flights, gliders  
 
-async def get_pilot_gliders(year: int):
+async def get_pilot_gliders(year):
     import pandas as pd
 
     # Input validation
-    if year < 2020 or year > 2025:
-        year = 2025
+    year = validate_year(year)
 
     try:
         dbName = DB_NAME_F.format(year=year)
@@ -104,12 +116,11 @@ async def get_pilot_gliders(year: int):
         import pandas as pd
         return pd.DataFrame()
 
-async def get_pilots_by_manufacturer(year: int):
+async def get_pilots_by_manufacturer(year):
         import pandas as pd
 
         # Input validation
-        if year < 2020 or year > 2025:
-            year = 2025
+        year = validate_year(year)
 
         try:
             dbName = DB_NAME_F.format(year=year)
@@ -143,12 +154,15 @@ async def get_pilots_by_manufacturer(year: int):
             return pd.DataFrame()
         
 
-async def get_unclassed_gliders(glider: str, top: int = 20, year: int = 2025):
+async def get_unclassed_gliders(glider: str, top: int = 20, year = 2025):
         # Input validation
-        if top < 1 or top > 1000:
+        year = validate_year(year)
+        try:
+            top = int(top)
+            if top < 1 or top > 1000:
+                top = 20
+        except (ValueError, TypeError):
             top = 20
-        if year < 2020 or year > 2025:
-            year = 2025
         
         gliders = []
         try:
@@ -178,14 +192,13 @@ def lognormal_1( mu, sigma):
     import math
     return 0.5*(1.0 + math.erf(mu/sigma/math.sqrt(2.0)))
 
-async def get_gliders(glider: str, g_class: str, year: int):
+async def get_gliders(glider: str, g_class: str, year):
         import math
         import pandas as pd
         import numpy as np
 
         # Input validation
-        if year < 2020 or year > 2025:
-            year = 2025
+        year = validate_year(year)
 
         point_goal, min_count = 100.0, 50
 
@@ -358,7 +371,7 @@ async def get_glider(glider:str):
         'img3_b64':img3_b64
     }
 
-async def get_comparison(year:int, compare):
+async def get_comparison(year, compare):
         import math
         import pandas as pd
         import numpy as np   
@@ -369,6 +382,7 @@ async def get_comparison(year:int, compare):
         point_goal = 100.0
 
         # Input validation
+        year = validate_year(year)
         if not compare or len(compare) == 0:
             return None
         if len(compare) > 20:  # Limit number of comparisons
