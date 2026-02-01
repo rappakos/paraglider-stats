@@ -46,6 +46,10 @@ we need at least `n` approx 200 flights.
 
 This year has been quite exciting since a bunch of new EN-C 2-liners appeared on the market.
 
+Most manufacturer grew in the C segment.
+
+In the high B segment there seems to be marginal difference in performance, so it is really a question of personality and flying style that defines the best wind.
+
 ### Overview
 
 ![Home page](./screenshots/home.PNG)
