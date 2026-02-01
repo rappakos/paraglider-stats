@@ -3,8 +3,7 @@ from .views import index, pilots, pilots_delta, gliders, glider
 
 
 def setup_routes(app):
-    # Create router with prefix from ROOT_PATH config
-    router = APIRouter(prefix=app.state.config.ROOT_PATH)
+    router = APIRouter()
     
     # GET routes
     router.add_api_route('/', index, methods=['GET'], name='index')
