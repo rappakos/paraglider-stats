@@ -16,7 +16,7 @@
             Unlcassified (no normalized glider name) are not included.
         </details>
         <hr />
-        <form action="/gliders" method="get" class="w3-container" autocomplete="off">
+        <form action="{{ url_for('gliders') }}" method="get" class="w3-container" autocomplete="off">
             <button type="submit" class="btn btn-success" >
              <i class="fa fa-filter"></i> Filter table
             </button>
@@ -66,7 +66,7 @@
                         <input type="checkbox" name="{{glider.glider_norm.lower().replace(' ','-')}}" />
                     {% endif %}
                 </td>
-                <td><a href="/gliders/{{ glider.glider_norm.lower().replace(' ','-') }}">{{ glider.glider_norm }}</a></td>
+                <td><a href="{{ url_for('glider', glider=glider.glider_norm.lower().replace(' ','-')) }}">{{ glider.glider_norm }}</a></td>
                 <td class="w3-center"  >{{ glider.class }}</td>
                 <td class="w3-right-align">{{ glider.count }}</td>
                 <!-- <td>{{  '{0:0.4f}'.format(glider.mu) }}</td> -->
@@ -123,7 +123,7 @@
         {% endif %}
 
         <h3>Top unclassified</h3>
-        <form action="/gliders" method="get" class="w3-container" autocomplete="off">
+        <form action="{{ url_for('gliders') }}" method="get" class="w3-container" autocomplete="off">
             <input type="text" id="unclass" name="unclass" value="{{filter.unclass}}" />
             <button type="submit" class="btn btn-success" >
              <i class="fa fa-filter"></i> Filter unclassified

@@ -15,7 +15,7 @@ CONFIG = DefaultConfig()
 
 
 def create_app():
-    app = FastAPI(root_path=CONFIG.ROOT_PATH)
+    app = FastAPI()
     
     app.state.config = CONFIG
     app.state.templates = Jinja2Templates(directory="glider_stats_app/templates")
