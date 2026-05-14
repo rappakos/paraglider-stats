@@ -5,6 +5,8 @@ from .views import index, pilots, pilots_delta, gliders, glider
 
 def setup_routes(app):
     prefix = os.environ.get('GLIDER_STATS_APP_ROOT_PATH', '')
+    if prefix and not prefix.startswith('/'):
+        prefix = '/' + prefix
     router = APIRouter(prefix=prefix)
     
     # GET routes
