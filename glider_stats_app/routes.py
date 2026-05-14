@@ -1,9 +1,11 @@
+import os
 from fastapi import APIRouter
 from .views import index, pilots, pilots_delta, gliders, glider
 
 
 def setup_routes(app):
-    router = APIRouter()
+    prefix = os.environ.get('GLIDER_STATS_APP_ROOT_PATH', '')
+    router = APIRouter(prefix=prefix)
     
     # GET routes
     router.add_api_route('/', index, methods=['GET'], name='index')
